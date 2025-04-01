@@ -1,31 +1,22 @@
-// src/app/projects/[id]/page.tsx
+// src/app/projects-public/[id]/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Project, Comment } from '@/lib/types';
-import { projectsApi, commentsApi } from '@/lib/api';
-import { useAuth } from '@/lib/auth';
-import { Button } from '@/components/ui/Button';
+import { Project } from '@/lib/types';
+import { publicProjectsApi } from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
-import { Card } from '@/components/ui/Card';
 import { Alert } from '@/components/ui/Alert';
-import { Textarea } from '@/components/ui/Textarea';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 
-export default function ProjectDetailPage() {
+export default function PublicProjectDetailPage() {
   const { id } = useParams();
   const projectId = Number(id);
-  const { user, isAuthenticated } = useAuth();
   
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  const [commentText, setCommentText] = useState('');
-  const [submittingComment, setSubmittingComment] = useState(false);
-  const [commentError, setCommentError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -33,7 +24,7 @@ export default function ProjectDetailPage() {
       setError(null);
       
       try {
-        const data = await projectsApi.getProject(projectId);
+        const data = await publicProjectsApi.getProject(projectId);
         setProject(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load project');
@@ -45,34 +36,6 @@ export default function ProjectDetailPage() {
     
     fetchProject();
   }, [projectId]);
-
-  const handleSubmitComment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!commentText.trim()) {
-      setCommentError('Comment cannot be empty');
-      return;
-    }
-    
-    setSubmittingComment(true);
-    setCommentError(null);
-    
-    try {
-      await commentsApi.createComment({
-        project: projectId,
-        comment_text: commentText.trim(),
-      });
-      
-      // Refresh project to get the new comment
-      const updatedProject = await projectsApi.getProject(projectId);
-      setProject(updatedProject);
-      setCommentText('');
-    } catch (err) {
-      setCommentError(err instanceof Error ? err.message : 'Failed to post comment');
-    } finally {
-      setSubmittingComment(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -91,7 +54,7 @@ export default function ProjectDetailPage() {
           message={error || 'Project not found'}
         />
         <div className="mt-4">
-          <Link href="/projects" className="text-blue-600 hover:text-blue-800">
+          <Link href="/projects-public" className="text-blue-600 hover:text-blue-800">
             ← Back to projects
           </Link>
         </div>
@@ -281,11 +244,6 @@ export default function ProjectDetailPage() {
                     <div className="ml-3">
                       <div className="text-sm font-medium text-gray-900">{teacher.teacher_name}</div>
                       <div className="text-sm text-gray-500">{teacher.role_display}</div>
-                      {!teacher.accepted && (
-                        <Badge variant="yellow" size="sm" className="mt-1">
-                          Pending
-                        </Badge>
-                      )}
                     </div>
                   </div>
                 ))}
@@ -294,43 +252,9 @@ export default function ProjectDetailPage() {
           )}
 
           {/* Comments */}
-          <div className="mt-8">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Comments</h2>
-            
-            {isAuthenticated ? (
-              <form onSubmit={handleSubmitComment} className="mb-6">
-                <Textarea
-                  label="Add a comment"
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  rows={3}
-                  fullWidth
-                  error={commentError || undefined}
-                />
-                <div className="mt-2">
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    isLoading={submittingComment}
-                    disabled={submittingComment || !commentText.trim()}
-                  >
-                    Post Comment
-                  </Button>
-                </div>
-              </form>
-            ) : (
-              <div className="mb-6 bg-gray-50 p-4 rounded-md">
-                <p className="text-gray-700">
-                  Please{' '}
-                  <Link href="/login" className="text-blue-600 hover:text-blue-800">
-                    log in
-                  </Link>
-                  {' '}to add a comment.
-                </p>
-              </div>
-            )}
-            
-            {project.comments && project.comments.length > 0 ? (
+          {project.comments && project.comments.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Comments</h2>
               <div className="space-y-4">
                 {project.comments.map((comment) => (
                   <div key={comment.id} className="bg-gray-50 p-4 rounded-md">
@@ -358,9 +282,17 @@ export default function ProjectDetailPage() {
                   </div>
                 ))}
               </div>
-            ) : (
-              <p className="text-gray-500 italic">No comments yet.</p>
-            )}
+            </div>
+          )}
+          
+          {/* Login prompt for comments */}
+          <div className="mt-8 p-4 bg-gray-50 rounded-md">
+            <p className="text-gray-700">
+              <Link href="/login" className="text-blue-600 hover:text-blue-800">
+                Log in
+              </Link>
+              {' '}to view more details and add comments.
+            </p>
           </div>
         </div>
       </div>

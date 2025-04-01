@@ -178,6 +178,27 @@ export const authApi = {
   },
 };
 
+// Public Projects API
+export const publicProjectsApi = {
+  async getProjects(params: Record<string, string> = {}) {
+    // Build query string
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) queryParams.set(key, value);
+    });
+    
+    const url = `${API_URL}/public/projects/${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const response = await fetch(url);
+    
+    return handleResponse<{ results: Project[]; count: number }>(response);
+  },
+  
+  async getProject(id: number) {
+    const response = await fetch(`${API_URL}/public/projects/${id}/`);
+    return handleResponse<Project>(response);
+  },
+};
+
 // Projects API
 export const projectsApi = {
   async getProjects(params: Record<string, string> = {}) {

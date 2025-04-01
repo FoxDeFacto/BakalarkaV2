@@ -1,15 +1,15 @@
-// src/app/projects/page.tsx
+// src/app/projects-public/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Project, ProjectFilters } from '@/lib/types';
-import { projectsApi } from '@/lib/api';
+import { publicProjectsApi } from '@/lib/api';
 import { ProjectCard } from '@/components/Projects/ProjectCard';
 import { ProjectFilters as ProjectFiltersComponent } from '@/components/Projects/ProjectFilters';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 
-export default function ProjectsPage() {
+export default function PublicProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [filters, setFilters] = useState<ProjectFilters>({});
   const [loading, setLoading] = useState(true);
@@ -37,7 +37,7 @@ export default function ProjectsPage() {
         params.keywords = newFilters.keywords.join(',');
       }
 
-      const response = await projectsApi.getProjects(params);
+      const response = await publicProjectsApi.getProjects(params);
       
       // If it's page 1, replace projects; otherwise, append
       if (pageNum === 1) {
@@ -74,9 +74,9 @@ export default function ProjectsPage() {
   return (
     <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Projects</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Public Projects</h1>
         <p className="mt-2 text-lg text-gray-600">
-          Browse and explore student research projects and seminar papers.
+          Browse and explore student research projects and seminar papers available to the public.
         </p>
       </div>
 
