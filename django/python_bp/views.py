@@ -1,10 +1,12 @@
 from rest_framework import viewsets, permissions, filters, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from .models import User, Project, ProjectTeacher, Milestone, Comment, Consultation, ProjectEvaluation
 from .serializer import (
@@ -44,7 +46,99 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+# Public API endpoints (no authentication required)
+@swagger_auto_schema(
+    method='get',
+    operation_description="List all public projects (where public_visibility=True)",
+    operation_summary="Get list of all public projects",
+    manual_parameters=[
+        openapi.Parameter('year', openapi.IN_QUERY, description="Filter by year", type=openapi.TYPE_INTEGER),
+        openapi.Parameter('field', openapi.IN_QUERY, description="Filter by field of study", type=openapi.TYPE_STRING),
+        openapi.Parameter('status', openapi.IN_QUERY, description="Filter by status", type=openapi.TYPE_STRING),
+        openapi.Parameter('search', openapi.IN_QUERY, description="Search in title, description, and keywords", type=openapi.TYPE_STRING),
+        openapi.Parameter('ordering', openapi.IN_QUERY, description="Order results by specified fields (e.g. -year,title)", type=openapi.TYPE_STRING),
+    ],
+    responses={200: ProjectListSerializer(many=True)}
+)
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def public_projects_list(request):
+    """
+    List all public projects (where public_visibility=True)
+    """
+    projects = Project.objects.filter(public_visibility=True, deleted=False)
+    
+    # Apply filters if provided
+    year = request.query_params.get('year', None)
+    if year:
+        projects = projects.filter(year=year)
+        
+    field = request.query_params.get('field', None)
+    if field:
+        projects = projects.filter(field=field)
+    
+    status_param = request.query_params.get('status', None)
+    if status_param:
+        projects = projects.filter(status=status_param)
+    
+    # Apply search if provided
+    search = request.query_params.get('search', None)
+    if search:
+        projects = projects.filter(
+            Q(title__icontains=search) | 
+            Q(description__icontains=search) | 
+            Q(keywords__contains=[search])
+        )
+    
+    # Apply ordering
+    ordering = request.query_params.get('ordering', '-year,title')
+    if ordering:
+        ordering_fields = ordering.split(',')
+        projects = projects.order_by(*ordering_fields)
+    
+    # Apply pagination
+    from rest_framework.pagination import PageNumberPagination
+    paginator = PageNumberPagination()
+    paginator.page_size = 20
+    result_page = paginator.paginate_queryset(projects, request)
+    
+    serializer = ProjectListSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+
+@swagger_auto_schema(
+    method='get',
+    operation_description="Retrieve a public project by id",
+    operation_summary="Get public project details by ID",
+    responses={
+        200: ProjectDetailSerializer(),
+        404: "Project not found or not public"
+    }
+)
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def public_project_detail(request, pk):
+    """
+    Retrieve a public project by id
+    """
+    try:
+        project = Project.objects.get(pk=pk, public_visibility=True, deleted=False)
+    except Project.DoesNotExist:
+        return Response({"detail": "Project not found or not public."}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = ProjectDetailSerializer(project)
+    return Response(serializer.data)
+
+
 class ProjectViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing projects. 
+    
+    Requires authentication. Access is controlled based on user roles:
+    - Admin: sees all non-deleted projects
+    - Teacher: sees projects they're assigned to + public projects
+    - Student: sees their own projects + public projects
+    """
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['year', 'field', 'status', 'type_of_work']
     search_fields = ['title', 'description', 'keywords']
@@ -52,18 +146,21 @@ class ProjectViewSet(viewsets.ModelViewSet):
     ordering = ['-year', 'title']
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve'] and not self.request.user.is_authenticated:
-            # Allow anonymous access for listing and retrieving projects
-            return [AllowAny()]
+        """
+        For authenticated endpoints, apply appropriate permissions.
+        Unauthenticated users have no access to these endpoints - they must use public endpoints instead.
+        """
         return [IsAuthenticated(), IsOwnerOrTeacherOrReadOnly()]
 
     def get_queryset(self):
-        # For anonymous users, only return public projects
-        if not self.request.user.is_authenticated:
-            return Project.objects.filter(public_visibility=True, deleted=False)
-        
-        # For authenticated users, apply role-based filtering
+        """
+        Return projects based on user role
+        - Admin: all non-deleted projects
+        - Teacher: projects they're assigned to + public projects
+        - Student: their own projects + public projects
+        """
         user = self.request.user
+        
         if user.role == 'admin':
             # Administrators see all non-deleted projects
             queryset = Project.objects.filter(deleted=False)
@@ -97,7 +194,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return ProjectCreateUpdateSerializer
         return ProjectDetailSerializer
     
-    # Rest of your methods remain the same
     def perform_create(self, serializer):
         # If created by a student, automatically assign them as author
         if self.request.user.role == 'student' and not serializer.validated_data.get('student'):
@@ -110,19 +206,85 @@ class ProjectViewSet(viewsets.ModelViewSet):
         instance.deleted = True
         instance.save()
     
-    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    @swagger_auto_schema(
+        method='post',
+        operation_description="Set project visibility (public or private)",
+        operation_summary="Change project visibility status",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['public_visibility'],
+            properties={
+                'public_visibility': openapi.Schema(
+                    type=openapi.TYPE_BOOLEAN,
+                    description='Boolean value to set project visibility'
+                )
+            }
+        ),
+        responses={
+            200: ProjectDetailSerializer(),
+            400: "Missing 'public_visibility' parameter",
+            403: "Only project teachers or administrators can change project visibility"
+        }
+    )
+    @action(detail=True, methods=['post'])
+    def set_visibility(self, request, pk=None):
+        """
+        Action to set project visibility (public or private)
+        Only teachers associated with the project or admins can change this
+        """
+        project = self.get_object()
+        user = request.user
+        
+        # Check if user is admin or a teacher assigned to this project
+        is_admin = user.role == 'admin'
+        is_project_teacher = user.role == 'teacher' and ProjectTeacher.objects.filter(
+            project=project, teacher=user
+        ).exists()
+        
+        if not (is_admin or is_project_teacher):
+            return Response(
+                {"detail": "Only project teachers or administrators can change project visibility."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Get the visibility parameter
+        visibility = request.data.get('public_visibility')
+        if visibility is None:
+            return Response(
+                {"detail": "Missing 'public_visibility' parameter."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Update the project visibility
+        project.public_visibility = visibility
+        project.save()
+        
+        serializer = self.get_serializer(project)
+        return Response(serializer.data)
+    
+    @swagger_auto_schema(
+        method='post',
+        operation_description="Submit a project (changes status to 'submitted')",
+        operation_summary="Submit a project",
+        responses={
+            200: ProjectDetailSerializer(),
+            400: "Cannot submit project without attached document",
+            403: "You don't have permission to submit this project"
+        }
+    )
+    @action(detail=True, methods=['post'])
     def submit(self, request, pk=None):
         """Action for submitting a project"""
         project = self.get_object()
         
         # Check if user is the project owner
         if request.user.role == 'student' and project.student != request.user:
-            return Response({"detail": "Nemáte oprávnění odevzdat tento projekt."}, 
+            return Response({"detail": "You don't have permission to submit this project."}, 
                           status=status.HTTP_403_FORBIDDEN)
         
         # Check if all required attachments are present
         if not project.document:
-            return Response({"detail": "Nelze odevzdat projekt bez přiloženého dokumentu."}, 
+            return Response({"detail": "Cannot submit project without attached document."}, 
                           status=status.HTTP_400_BAD_REQUEST)
         
         project.status = 'submitted'
