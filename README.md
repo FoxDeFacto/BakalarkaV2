@@ -1,4 +1,4 @@
-# ProjectHub - Student Project Management Portal
+# Student Project Management Portal
 
 A web portal for managing student research projects and seminar papers.
 
