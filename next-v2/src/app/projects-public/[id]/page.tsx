@@ -84,7 +84,7 @@ export default function ProjectDetailPage() {
 
   if (error || !project) {
     return (
-      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white">
         <Alert
           variant="danger"
           title="Error"
@@ -120,7 +120,7 @@ export default function ProjectDetailPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="mb-6">
-        <Link href="/projects" className="inline-flex items-center text-blue-600 hover:text-blue-800">
+        <Link href="/projects-public" className="inline-flex items-center text-blue-600 hover:text-blue-800">
           <ChevronLeftIcon className="h-5 w-5 mr-1" />
           Back to projects
         </Link>

@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #000000; /* Black text for light mode */
+  --background: #ffffff;  /* Change to white */
+  --foreground: #000000;  /* Keep text black */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #000000; /* Keep text black even in dark mode */
+    --background: #ffffff;  /* Keep white even in dark mode */
+    --foreground: #000000;  /* Keep text black */
   }
 }
 

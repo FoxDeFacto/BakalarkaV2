@@ -27,7 +27,7 @@ function CreateProjectPage() {
         
         // Redirect to the project page after a short delay
         setTimeout(() => {
-          router.push(`/dashboard/projects/${newProject.id}`);
+          router.push(`/dashboard/my-projects`);
         }, 1500);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to create project. Please try again.');

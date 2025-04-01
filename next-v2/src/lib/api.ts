@@ -246,7 +246,7 @@ export const fileApi = {
     formData.append('file', file);
     formData.append('type', type);
     
-    const response = await fetchWithAuth(`${API_URL}/upload-file/`, {
+    const response = await fetchWithAuth(`${API_URL}/upload/`, {
       method: 'POST',
       body: formData,
     });

@@ -105,7 +105,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Media files
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
@@ -153,8 +153,8 @@ CORS_ALLOWED_ORIGINS = [
 
 # File upload settings
 FILE_UPLOAD_HANDLERS = [
-    'django.python_bp.files.uploadhandler.MemoryFileUploadHandler',
-    'django.python_bp.files.uploadhandler.TemporaryFileUploadHandler',
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 ]
 MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 

@@ -40,7 +40,7 @@ export function FileUpload({
     if (!e.target.files || e.target.files.length === 0) {
       return;
     }
-
+  
     const file = e.target.files[0];
     
     // Check file size
@@ -48,12 +48,16 @@ export function FileUpload({
       setUploadError(`File size must be less than ${maxSize}MB`);
       return;
     }
-
+  
     setIsLoading(true);
     setUploadError(null);
-
+  
     try {
+      console.log('Uploading file:', file.name, 'type:', type);
+      
       const result = await fileApi.uploadFile(file, type);
+      console.log('Upload successful:', result);
+      
       onUploadComplete(result.file_path);
       
       // Update preview if it's an image
@@ -63,6 +67,7 @@ export function FileUpload({
         setPreview(null);
       }
     } catch (err) {
+      console.error('Upload error details:', err);
       setUploadError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
       setIsLoading(false);

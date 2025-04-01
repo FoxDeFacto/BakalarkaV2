@@ -89,5 +89,5 @@ def upload_file(request):
             destination.write(chunk)
     
     # Vrácení cesty k souboru
-    file_url = os.path.join(settings.MEDIA_URL, file_path)
+    file_url = f"{settings.MEDIA_URL.rstrip('/')}/{file_path}"
     return Response({'file_path': file_path, 'url': file_url}, status=status.HTTP_201_CREATED)
