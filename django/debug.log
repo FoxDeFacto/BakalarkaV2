@@ -7974,3 +7974,13 @@ INFO 2025-04-01 12:57:11,549 autoreload C:\Users\Ondøej Liška\source\repos\Web\p
 INFO 2025-04-01 12:57:12,079 autoreload Watching for file changes with StatReloader
 INFO 2025-04-01 12:58:08,246 autoreload C:\Users\Ondøej Liška\source\repos\Web\python_bp\django\python_bp\file_upload.py changed, reloading.
 INFO 2025-04-01 12:58:08,774 autoreload Watching for file changes with StatReloader
+INFO 2025-04-01 12:58:23,486 basehttp "GET /users/me/ HTTP/1.1" 200 225
+INFO 2025-04-01 12:58:23,496 basehttp "GET /projects/18/ HTTP/1.1" 200 1339
+INFO 2025-04-01 12:58:23,561 basehttp "GET /media/thumbnails/eb0c79c9-a0a3-41d4-a62d-84221975d9b1.jpg HTTP/1.1" 200 186349
+INFO 2025-04-01 12:58:29,018 basehttp "GET /media/documents/7562d589-c47d-4e32-8264-37bed15e82e8.pdf HTTP/1.1" 200 363924
+WARNING 2025-04-01 12:58:29,051 log Not Found: /favicon.ico
+WARNING 2025-04-01 12:58:29,052 basehttp "GET /favicon.ico HTTP/1.1" 404 14095
+INFO 2025-04-01 12:58:32,716 basehttp "GET /media/posters/fd989c33-15df-4c92-a131-4ec37bc0dcdb.jpg HTTP/1.1" 200 146235
+INFO 2025-04-01 12:58:40,313 basehttp - Broken pipe from ('127.0.0.1', 59823)
+INFO 2025-04-01 12:58:46,947 basehttp "GET /projects/?page=1 HTTP/1.1" 200 930
+INFO 2025-04-01 12:58:46,947 basehttp "GET /projects/?page=1 HTTP/1.1" 200 930
