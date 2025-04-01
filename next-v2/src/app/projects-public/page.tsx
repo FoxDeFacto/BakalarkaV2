@@ -1,7 +1,7 @@
 // src/app/projects-public/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Project, ProjectFilters } from '@/lib/types';
 import { publicProjectsApi } from '@/lib/api';
 import { ProjectCard } from '@/components/Projects/ProjectCard';
@@ -18,7 +18,8 @@ export default function PublicProjectsPage() {
   const [page, setPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(false);
 
-  const fetchProjects = async (pageNum = 1, newFilters: ProjectFilters = filters) => {
+  // Use useCallback to ensure fetchProjects doesn't change on every render
+  const fetchProjects = useCallback(async (pageNum = 1, newFilters: ProjectFilters = filters) => {
     setLoading(true);
     setError(null);
 
@@ -55,21 +56,21 @@ export default function PublicProjectsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, page]);
 
-  // Initial load
+  // Initial load - only run once
   useEffect(() => {
-    fetchProjects(1);
+    fetchProjects(1, {});
   }, []);
 
-  const handleFilterChange = (newFilters: ProjectFilters) => {
+  const handleFilterChange = useCallback((newFilters: ProjectFilters) => {
     setFilters(newFilters);
     fetchProjects(1, newFilters);
-  };
+  }, [fetchProjects]);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     fetchProjects(page + 1);
-  };
+  }, [fetchProjects, page]);
 
   return (
     <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white">
