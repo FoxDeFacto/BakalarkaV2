@@ -2,15 +2,55 @@
 'use client';
 
 import Link from 'next/link';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@/lib/auth';
 import { usePathname } from 'next/navigation';
 
 export default function Header() {
-  const { user, isAuthenticated, isStudent, isTeacher, isAdmin, logout } = useAuth();
+  const { user, isAuthenticated, isStudent, isTeacher, isAdmin, logout, loading } = useAuth();
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+  
+  // Use useEffect to handle client-side mounting
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Wait for component to be mounted before rendering anything with state
+  if (!mounted) {
+    return (
+      <nav className="bg-blue-800">
+        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="relative flex h-16 items-center justify-between">
+            <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+              <div className="flex flex-shrink-0 items-center">
+                <span className="text-white font-bold text-xl">ProjectHub</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
+
+  // Still loading auth state
+  if (loading) {
+    return (
+      <nav className="bg-blue-800">
+        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="relative flex h-16 items-center justify-between">
+            <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+              <div className="flex flex-shrink-0 items-center">
+                <span className="text-white font-bold text-xl">ProjectHub</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   // Navigation items based on user role
   const navigation = [

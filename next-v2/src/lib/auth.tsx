@@ -35,20 +35,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Check if user is logged in on mount
   useEffect(() => {
+    let isMounted = true;
+    
     async function loadUser() {
       try {
         const currentUser = await authApi.getCurrentUser();
-        setUser(currentUser);
+        if (isMounted) {
+          setUser(currentUser);
+        }
       } catch (err) {
         console.error('Failed to load user:', err);
         // Clear tokens if authentication fails
-        authApi.logout();
+        if (isMounted) {
+          authApi.logout();
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
 
     loadUser();
+    
+    // Cleanup function to handle component unmount
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const login = async (username: string, password: string) => {
@@ -134,7 +147,7 @@ export function useAuth() {
   return context;
 }
 
-// Auth required higher-order component
+// Auth required higher-order component with improved loading state handling
 export function withAuth(Component: React.ComponentType) {
   return function AuthComponent(props: any) {
     const { user, loading, isAuthenticated } = useAuth();
@@ -158,7 +171,7 @@ export function withAuth(Component: React.ComponentType) {
   };
 }
 
-// Route protection for role-based access
+// Route protection for role-based access with improved loading state handling
 export function withRole(Component: React.ComponentType, allowedRoles: ('student' | 'teacher' | 'admin')[]) {
   return function RoleComponent(props: any) {
     const { user, loading, isAuthenticated } = useAuth();

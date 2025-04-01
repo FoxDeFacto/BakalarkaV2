@@ -1,301 +1,152 @@
-// src/app/projects-public/[id]/page.tsx
+// src/app/projects-public/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import { Project } from '@/lib/types';
+import { useState, useEffect, useCallback } from 'react';
+import { Project, ProjectFilters } from '@/lib/types';
 import { publicProjectsApi } from '@/lib/api';
-import { Badge } from '@/components/ui/Badge';
+import { ProjectCard } from '@/components/Projects/ProjectCard';
+import { ProjectFilters as ProjectFiltersComponent } from '@/components/Projects/ProjectFilters';
+import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
-import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 
-export default function PublicProjectDetailPage() {
-  const { id } = useParams();
-  const projectId = Number(id);
-  
-  const [project, setProject] = useState<Project | null>(null);
+export default function PublicProjectsPage() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [filters, setFilters] = useState<ProjectFilters>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [totalProjects, setTotalProjects] = useState(0);
+  const [page, setPage] = useState(1);
+  const [hasMorePages, setHasMorePages] = useState(false);
 
-  useEffect(() => {
-    const fetchProject = async () => {
-      setLoading(true);
-      setError(null);
-      
-      try {
-        const data = await publicProjectsApi.getProject(projectId);
-        setProject(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load project');
-        console.error('Error fetching project:', err);
-      } finally {
-        setLoading(false);
+  // Use useCallback to ensure fetchProjects doesn't change on every render
+  const fetchProjects = useCallback(async (pageNum = 1, newFilters: ProjectFilters = filters) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Convert filters to query params
+      const params: Record<string, string> = {
+        page: pageNum.toString(),
+      };
+
+      if (newFilters.search) params.search = newFilters.search;
+      if (newFilters.year) params.year = newFilters.year.toString();
+      if (newFilters.field) params.field = newFilters.field;
+      if (newFilters.status) params.status = newFilters.status;
+      if (newFilters.type_of_work) params.type_of_work = newFilters.type_of_work;
+      if (newFilters.keywords && newFilters.keywords.length) {
+        params.keywords = newFilters.keywords.join(',');
       }
-    };
-    
-    fetchProject();
-  }, [projectId]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (error || !project) {
-    return (
-      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white">
-        <Alert
-          variant="danger"
-          title="Error"
-          message={error || 'Project not found'}
-        />
-        <div className="mt-4">
-          <Link href="/projects-public" className="text-blue-600 hover:text-blue-800">
-            ← Back to projects
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  // Helper function to get badge color based on status
-  const getStatusBadgeColor = (status: string): 'gray' | 'blue' | 'green' | 'red' | 'yellow' => {
-    switch (status) {
-      case 'draft':
-        return 'gray';
-      case 'in_progress':
-        return 'blue';
-      case 'submitted':
-        return 'yellow';
-      case 'evaluated':
-        return 'blue';
-      case 'completed':
-        return 'green';
-      default:
-        return 'gray';
+      const response = await publicProjectsApi.getProjects(params);
+      
+      // If it's page 1, replace projects; otherwise, append
+      if (pageNum === 1) {
+        setProjects(response.results);
+      } else {
+        setProjects((prev) => [...prev, ...response.results]);
+      }
+      
+      setTotalProjects(response.count);
+      setHasMorePages(response.results.length === 20 && response.count > page * 20);
+      setPage(pageNum);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load projects');
+      console.error('Error fetching projects:', err);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [filters, page]);
+
+  // Initial load - only run once
+  useEffect(() => {
+    fetchProjects(1, {});
+  }, []);
+
+  const handleFilterChange = useCallback((newFilters: ProjectFilters) => {
+    setFilters(newFilters);
+    fetchProjects(1, newFilters);
+  }, [fetchProjects]);
+
+  const handleLoadMore = useCallback(() => {
+    fetchProjects(page + 1);
+  }, [fetchProjects, page]);
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <div className="mb-6">
-        <Link href="/projects-public" className="inline-flex items-center text-blue-600 hover:text-blue-800">
-          <ChevronLeftIcon className="h-5 w-5 mr-1" />
-          Back to projects
-        </Link>
+    <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Public Projects</h1>
+        <p className="mt-2 text-lg text-gray-600">
+          Browse and explore student research projects and seminar papers available to the public.
+        </p>
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        {/* Project header */}
-        <div className="px-6 py-5 border-b border-gray-200 bg-gray-50">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{project.title}</h1>
-              <div className="mt-1 flex items-center">
-                <span className="text-sm text-gray-500 mr-2">By {project.student_name}</span>
-                <Badge variant={getStatusBadgeColor(project.status)}>
-                  {project.status_display}
-                </Badge>
-              </div>
-            </div>
-            <div className="mt-4 md:mt-0">
-              <Badge variant="gray" size="lg" className="mr-2">
-                {project.year}
-              </Badge>
-              <Badge variant="gray" size="lg">
-                {project.type_display}
-              </Badge>
-            </div>
-          </div>
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Filters sidebar */}
+        <div className="w-full md:w-64 flex-shrink-0">
+          <ProjectFiltersComponent onFilterChange={handleFilterChange} initialFilters={filters} />
         </div>
 
-        {/* Project content */}
-        <div className="p-6">
-          {/* Thumbnail/image */}
-          {project.thumbnail && (
-            <div className="mb-6">
-              <img
-                src={`http://localhost:8000/media/${project.thumbnail}`}
-                alt={project.title}
-                className="w-full max-h-96 object-contain rounded"
-              />
-            </div>
+        {/* Projects grid */}
+        <div className="flex-1">
+          {error && (
+            <Alert variant="danger" message={error}/>
           )}
 
-          {/* Description */}
-          <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-2">Description</h2>
-            <p className="text-gray-700 whitespace-pre-line">{project.description}</p>
-          </div>
-
-          {/* Field and keywords */}
-          <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-2">Field & Keywords</h2>
-            <div className="flex flex-col space-y-2">
-              <div>
-                <span className="text-gray-500">Field: </span>
-                <span className="text-gray-900">{project.field}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">Keywords: </span>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {project.keywords.map((keyword, i) => (
-                    <Badge key={i} variant="gray" size="sm">
-                      {keyword}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Files */}
-          <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-2">Project Files</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {project.document && (
-                <a
-                  href={`http://localhost:8000/media/${project.document}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50"
-                >
-                  <svg
-                    className="h-6 w-6 text-gray-500 mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  <span>Document</span>
-                </a>
-              )}
-
-              {project.poster && (
-                <a
-                  href={`http://localhost:8000/media/${project.poster}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50"
-                >
-                  <svg
-                    className="h-6 w-6 text-gray-500 mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <span>Poster</span>
-                </a>
-              )}
-
-              {project.video && (
-                <a
-                  href={`http://localhost:8000/media/${project.video}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50"
-                >
-                  <svg
-                    className="h-6 w-6 text-gray-500 mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <span>Video</span>
-                </a>
-              )}
-            </div>
-          </div>
-
-          {/* Teachers */}
-          {project.teachers && project.teachers.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-2">Project Teachers</h2>
-              <div className="space-y-3">
-                {project.teachers.map((teacher) => (
-                  <div key={teacher.id} className="flex items-start">
-                    <div className="flex-shrink-0 h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
-                      {teacher.teacher_name.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="ml-3">
-                      <div className="text-sm font-medium text-gray-900">{teacher.teacher_name}</div>
-                      <div className="text-sm text-gray-500">{teacher.role_display}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Comments */}
-          {project.comments && project.comments.length > 0 && (
-            <div className="mt-8">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Comments</h2>
-              <div className="space-y-4">
-                {project.comments.map((comment) => (
-                  <div key={comment.id} className="bg-gray-50 p-4 rounded-md">
-                    <div className="flex items-start">
-                      <div className="flex-shrink-0 h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
-                        {comment.user_name.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="ml-3 flex-1">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">{comment.user_name}</div>
-                            <div className="text-xs text-gray-500">
-                              {new Date(comment.created_at).toLocaleString()}
-                            </div>
-                          </div>
-                          <Badge variant="gray" size="sm">
-                            {comment.user_role}
-                          </Badge>
-                        </div>
-                        <div className="mt-2 text-sm text-gray-700 whitespace-pre-line">
-                          {comment.comment_text}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {/* Login prompt for comments */}
-          <div className="mt-8 p-4 bg-gray-50 rounded-md">
-            <p className="text-gray-700">
-              <Link href="/login" className="text-blue-600 hover:text-blue-800">
-                Log in
-              </Link>
-              {' '}to view more details and add comments.
+          <div className="mb-4">
+            <p className="text-sm text-gray-500">
+              {totalProjects} project{totalProjects !== 1 ? 's' : ''} found
             </p>
           </div>
-        </div>
+
+          {loading && projects.length === 0 ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="text-center py-8 bg-white shadow rounded-lg">
+            <svg
+              className="mx-auto h-12 w-12 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <h3 className="mt-2 text-lg font-medium text-gray-900">No projects found</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Try adjusting your filters to find what you're looking for.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {projects.map((project) => (
+                <ProjectCard key={project.id} project={project} isPublic={true} />
+              ))}
+            </div>
+
+            {hasMorePages && (
+              <div className="mt-8 flex justify-center">
+                <Button
+                  onClick={handleLoadMore}
+                  variant="outline"
+                  isLoading={loading}
+                  disabled={loading}
+                >
+                  Load More
+                </Button>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
-  );
+  </div>
+);
 }

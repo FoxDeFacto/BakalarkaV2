@@ -1,7 +1,7 @@
 // src/components/projects/ProjectFilters.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ProjectFilters as FilterTypes } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -16,14 +16,17 @@ interface ProjectFiltersProps {
 export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectFiltersProps) {
   const [filters, setFilters] = useState<FilterTypes>(initialFilters);
   const [keywordInput, setKeywordInput] = useState('');
+  const initialRenderRef = useRef(true);
 
-  // Apply filters when component mounts with initial filters
+  // Set initial filters state from props, but only on initial mount
   useEffect(() => {
     if (Object.keys(initialFilters).length > 0) {
-      onFilterChange(initialFilters);
+      setFilters(initialFilters);
     }
-  }, [initialFilters, onFilterChange]);
+  }, []);
 
+  // Only call onFilterChange when filters change due to user interaction,
+  // not during initial render or when props change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     const newFilters = { ...filters, [name]: value || undefined };
