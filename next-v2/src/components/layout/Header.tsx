@@ -62,7 +62,7 @@ export default function Header() {
     navigation.push({ name: 'Dashboard', href: '/dashboard', current: pathname === '/dashboard' });
     
     if (isStudent) {
-      navigation.push({ name: 'My Projects', href: '/dashboard/projects', current: pathname === '/dashboard/projects' });
+      navigation.push({ name: 'My Projects', href: '/dashboard/my-projects', current: pathname === '/dashboard/my-projects' });
     }
     
     if (isTeacher || isAdmin) {

@@ -1,6 +1,7 @@
 // src/app/page.tsx
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { FileText, Handshake, ListChecks, Speech } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -34,7 +35,7 @@ export default function HomePage() {
       </div>
 
       {/* Features section */}
-      <div className="py-16 sm:py-24">
+      <div className="py-16 sm:py-24 bg-blue-200">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:text-center">
             <h2 className="text-base font-semibold leading-7 text-blue-600">Explore our platform</h2>
@@ -50,6 +51,7 @@ export default function HomePage() {
               <div className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
                   <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                    <FileText color='white' size={32}></FileText>
                   </div>
                   Project Documentation
                 </dt>
@@ -60,6 +62,7 @@ export default function HomePage() {
               <div className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
                   <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                    <Handshake color='white' size={32}></Handshake>
                   </div>
                   Teacher-Student Collaboration
                 </dt>
@@ -70,6 +73,7 @@ export default function HomePage() {
               <div className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
                   <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                    <ListChecks color='white' size={32}></ListChecks>
                   </div>
                   Project Progress Tracking
                 </dt>
@@ -80,6 +84,7 @@ export default function HomePage() {
               <div className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
                   <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                    <Speech color='white' size={32}></Speech>
                   </div>
                   Communication Tools
                 </dt>
@@ -96,19 +101,19 @@ export default function HomePage() {
       <div className="bg-blue-600">
         <div className="px-6 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <p className="text-white text-3xl font-bold tracking-tight sm:text-4xl ">
               Start managing your projects today
-            </h2>
+            </p>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-blue-100">
               Join our platform to showcase your work, get guidance from teachers, and collaborate with peers.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link href="/register">
-                <Button variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
+                <Button variant="outline" size="lg" className="bg-white text-black hover:bg-blue-50">
                   Get started
                 </Button>
               </Link>
-              <Link href="/projects-public" className="text-sm font-semibold leading-6 text-white">
+              <Link href="/projects-public" className="p-3 rounded bg-white text-black hover:bg-blue-50">
                 Browse projects <span aria-hidden="true">→</span>
               </Link>
             </div>
