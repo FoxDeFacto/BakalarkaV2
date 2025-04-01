@@ -22,7 +22,7 @@ function CreateProjectPage() {
       setSuccess(null);
   
       try {
-        const newProject = await projectsApi.createProject(projectData);
+        await projectsApi.createProject(projectData);
         setSuccess('Project created successfully!');
         
         // Redirect to the project page after a short delay

@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { ProjectEvaluation } from '@/lib/types';
-import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
 
@@ -42,7 +41,7 @@ export function EvaluationForm({ projectId, initialData = {}, onSubmit, isLoadin
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
+    const { name, value } = e.target;
     
     if (name === 'score') {
       setFormData((prev) => ({ ...prev, [name]: parseInt(value) }));

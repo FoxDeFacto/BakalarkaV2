@@ -5,18 +5,28 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Project } from '@/lib/types';
-import { publicProjectsApi } from '@/lib/api';
+import { publicProjectsApi, commentsApi } from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
 import { Alert } from '@/components/ui/Alert';
+import { Button } from '@/components/ui/Button';
+import { Textarea } from '@/components/ui/Textarea';
+import { useAuth } from '@/lib/auth';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 
 export default function PublicProjectDetailPage() {
   const { id } = useParams();
   const projectId = Number(id);
+  const { user, isAuthenticated } = useAuth();
   
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Comment state
+  const [commentText, setCommentText] = useState('');
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [commentError, setCommentError] = useState<string | null>(null);
+  const [commentSuccess, setCommentSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -36,6 +46,40 @@ export default function PublicProjectDetailPage() {
     
     fetchProject();
   }, [projectId]);
+
+  const handleSubmitComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!commentText.trim()) {
+      setCommentError('Comment cannot be empty');
+      return;
+    }
+    
+    setSubmittingComment(true);
+    setCommentError(null);
+    
+    try {
+      await commentsApi.createComment({
+        project: projectId,
+        comment_text: commentText.trim(),
+      });
+      
+      // Refresh project to get the new comment
+      const updatedProject = await publicProjectsApi.getProject(projectId);
+      setProject(updatedProject);
+      setCommentText('');
+      setCommentSuccess('Comment posted successfully!');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setCommentSuccess(null);
+      }, 3000);
+    } catch (err) {
+      setCommentError(err instanceof Error ? err.message : 'Failed to post comment');
+    } finally {
+      setSubmittingComment(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -251,49 +295,113 @@ export default function PublicProjectDetailPage() {
             </div>
           )}
 
-          {/* Comments */}
-          {project.comments && project.comments.length > 0 && (
-            <div className="mt-8">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Comments</h2>
-              <div className="space-y-4">
-                {project.comments.map((comment) => (
-                  <div key={comment.id} className="bg-gray-50 p-4 rounded-md">
-                    <div className="flex items-start">
-                      <div className="flex-shrink-0 h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
-                        {comment.user_name.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="ml-3 flex-1">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">{comment.user_name}</div>
-                            <div className="text-xs text-gray-500">
-                              {new Date(comment.created_at).toLocaleString()}
+          {/* Comments section */}
+          <div className="mt-8">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Comments</h2>
+            
+            {/* Add comment form if authenticated */}
+            {isAuthenticated ? (
+              <form onSubmit={handleSubmitComment} className="mb-6">
+                {commentSuccess && (
+                  <div className="mb-3">
+                    <Alert variant="success" message={commentSuccess} />
+                  </div>
+                )}
+                
+                <Textarea
+                  label="Add a comment"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  rows={3}
+                  fullWidth
+                  error={commentError || undefined}
+                />
+                <div className="mt-2">
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    isLoading={submittingComment}
+                    disabled={submittingComment || !commentText.trim()}
+                  >
+                    Post Comment
+                  </Button>
+                </div>
+              </form>
+            ) : (
+              <div className="mb-6 bg-gray-50 p-4 rounded-md">
+                <p className="text-gray-700">
+                  <Link href="/login" className="text-blue-600 hover:text-blue-800">
+                    Log in
+                  </Link>
+                  {' '}to add a comment.
+                </p>
+              </div>
+            )}
+            
+              {/* Comments list */}
+              {project.comments && project.comments.length > 0 ? (
+                <div className="space-y-4">             
+                  {project.comments
+                    .slice() // Create a copy to avoid mutating original array
+                    .sort((a, b) => {
+                      // Safely handle date comparison with type coercion
+                      const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+                      const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+                      return dateB - dateA;
+                    })
+                    .map((comment) => (
+                      <div key={comment.id} className="bg-gray-50 p-4 rounded-md">
+                        <div className="flex items-start">
+                          <div className="flex-shrink-0 h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                            {comment.user_name?.charAt(0).toUpperCase() || '?'}
+                          </div>
+                          <div className="ml-3 flex-1">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <div className="text-sm font-medium text-gray-900">
+                                  {comment.user_name || 'Unknown User'}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {comment.created_at 
+                                    ? new Date(comment.created_at).toLocaleString() 
+                                    : 'Date unavailable'}
+                                </div>
+                              </div>
+                              {comment.user_role && (
+                                <Badge variant="gray" size="sm">
+                                  {comment.user_role}
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="mt-2 text-sm text-gray-700 whitespace-pre-line">
+                              {comment.comment_text || 'No comment text'}
                             </div>
                           </div>
-                          <Badge variant="gray" size="sm">
-                            {comment.user_role}
-                          </Badge>
-                        </div>
-                        <div className="mt-2 text-sm text-gray-700 whitespace-pre-line">
-                          {comment.comment_text}
                         </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 italic">No comments yet.</p>
+              )}
+          </div>
+          
+          {/* Call to action for logged in users */}
+          {isAuthenticated && (
+            <div className="mt-8 p-6">
+              <div className="flex space-x-4">
+                
+                {/* Only show this for teachers */}
+                {user?.role === 'teacher' && (
+                  <Link href={`/dashboard/assigned`}>
+                    <Button variant="outline">
+                      Manage Assigned Projects
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
           )}
-          
-          {/* Login prompt for comments */}
-          <div className="mt-8 p-4 bg-gray-50 rounded-md">
-            <p className="text-gray-700">
-              <Link href="/login" className="text-blue-600 hover:text-blue-800">
-                Log in
-              </Link>
-              {' '}to view more details and add comments.
-            </p>
-          </div>
         </div>
       </div>
     </div>

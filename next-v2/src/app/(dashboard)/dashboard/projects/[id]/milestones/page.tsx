@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { withAuth } from '@/lib/auth';
 import { useAuth } from '@/lib/auth';
@@ -19,7 +19,7 @@ import { ChevronLeftIcon, PlusIcon, PencilIcon, TrashIcon, CheckIcon } from '@he
 function MilestonesPage() {
   const { id } = useParams();
   const projectId = Number(id);
-  const router = useRouter();
+  //const router = useRouter();
   const { isTeacher, isAdmin } = useAuth();
   
   const [project, setProject] = useState<Project | null>(null);

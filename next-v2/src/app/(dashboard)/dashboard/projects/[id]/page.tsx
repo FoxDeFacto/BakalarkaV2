@@ -237,7 +237,8 @@ function ProjectDetailPage() {
   const isOwner = isStudent && user?.id === project.student;
   
   // Check if current user is a teacher assigned to the project
-  const isAssignedTeacher = isTeacher && project.teachers?.some(t => t.teacher === user?.id);
+  
+  //const isAssignedTeacher = isTeacher && project.teachers?.some(t => t.teacher === user?.id);
 
   return (
     <DashboardLayout>

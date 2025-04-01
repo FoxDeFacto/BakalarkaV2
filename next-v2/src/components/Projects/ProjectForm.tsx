@@ -2,13 +2,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Project, WorkType } from '@/lib/types';
+import { Project } from '@/lib/types';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
 import { FileUpload } from '@/components/ui/FileUpload';
-import { Alert } from '@/components/ui/Alert';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 interface ProjectFormProps {

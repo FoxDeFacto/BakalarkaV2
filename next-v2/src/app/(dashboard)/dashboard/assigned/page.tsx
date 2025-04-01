@@ -162,7 +162,7 @@ function AssignedProjectsPage() {
             </svg>
             <h3 className="mt-2 text-lg font-medium text-gray-900">No assigned projects</h3>
             <p className="mt-1 text-sm text-gray-500">
-              You haven't been assigned to any projects yet.
+              You have not been assigned to any projects yet.
             </p>
           </div>
         ) : (

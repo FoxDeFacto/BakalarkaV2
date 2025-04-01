@@ -86,7 +86,7 @@ function Dashboard() {
       <div>
         <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Welcome back, {user?.username}! Here's an overview of your projects and activities.
+          Welcome back, {user?.username}! Here is an overview of your projects and activities.
         </p>
         
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">

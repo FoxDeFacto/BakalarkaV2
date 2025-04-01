@@ -48,7 +48,7 @@ export function MilestoneForm({ projectId, initialData = {}, onSubmit, isLoading
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
+    const { name, value } = e.target;
     
     if (name === 'completion') {
       setFormData((prev) => ({ ...prev, [name]: parseInt(value) }));

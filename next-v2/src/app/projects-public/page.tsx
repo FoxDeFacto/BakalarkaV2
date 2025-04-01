@@ -61,7 +61,7 @@ export default function PublicProjectsPage() {
   // Initial load - only run once
   useEffect(() => {
     fetchProjects(1, {});
-  }, []);
+  }, [fetchProjects]);
 
   const handleFilterChange = useCallback((newFilters: ProjectFilters) => {
     setFilters(newFilters);
@@ -120,7 +120,7 @@ export default function PublicProjectsPage() {
             </svg>
             <h3 className="mt-2 text-lg font-medium text-gray-900">No projects found</h3>
             <p className="mt-1 text-sm text-gray-500">
-              Try adjusting your filters to find what you're looking for.
+              Try adjusting your filters to find what you are looking for.
             </p>
           </div>
         ) : (

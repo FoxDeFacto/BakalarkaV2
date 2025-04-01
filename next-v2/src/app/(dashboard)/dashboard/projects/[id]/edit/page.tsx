@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { withAuth } from '@/lib/auth';
 import { Project } from '@/lib/types';
@@ -16,7 +16,7 @@ import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 function EditProjectPage() {
   const { id } = useParams();
   const projectId = Number(id);
-  const router = useRouter();
+  //const router = useRouter();
   
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);

@@ -111,7 +111,7 @@ function EvaluationsDashboardPage() {
             </svg>
             <h3 className="mt-2 text-lg font-medium text-gray-900">No evaluations found</h3>
             <p className="mt-1 text-sm text-gray-500">
-              You haven't submitted any evaluations yet.
+              You have not submitted any evaluations yet.
             </p>
             <div className="mt-6">
               <Link href="/dashboard/projects">

@@ -102,7 +102,7 @@ function MyProjectsPage() {
             </svg>
             <h3 className="mt-2 text-lg font-medium text-gray-900">No projects found</h3>
             <p className="mt-1 text-sm text-gray-500">
-              You haven't created any projects yet.
+              You have not created any projects yet.
             </p>
             <div className="mt-4">
               <Link href="/dashboard/create-project">
