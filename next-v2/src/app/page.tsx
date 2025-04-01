@@ -18,7 +18,7 @@ export default function HomePage() {
               A platform for students, teachers, and the public to access and manage research projects and seminar papers.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link href="/projects">
+              <Link href="/projects-public">
                 <Button variant="primary" size="lg">
                   Browse Projects
                 </Button>
@@ -108,7 +108,7 @@ export default function HomePage() {
                   Get started
                 </Button>
               </Link>
-              <Link href="/projects" className="text-sm font-semibold leading-6 text-white">
+              <Link href="/projects-public" className="text-sm font-semibold leading-6 text-white">
                 Browse projects <span aria-hidden="true">→</span>
               </Link>
             </div>

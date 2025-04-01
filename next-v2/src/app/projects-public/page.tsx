@@ -72,7 +72,7 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white">
+    <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Projects</h1>
         <p className="mt-2 text-lg text-gray-600">
