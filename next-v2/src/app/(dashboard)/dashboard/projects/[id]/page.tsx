@@ -97,6 +97,24 @@ function ProjectDetailPage() {
     }
   };
 
+  const handleDeclineAssignment = async (teacherId: number) => {
+    if (!confirm('Are you sure you want to decline this assignment? This action cannot be undone.')) {
+      return;
+    }
+    
+    setError(null);
+    
+    try {
+      await projectTeachersApi.declineAssignment(teacherId);
+      
+      // Refresh project data
+      await fetchProject();
+      setSuccess('Assignment declined successfully');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to decline assignment');
+    }
+  };
+
   const handleRemoveTeacher = async (teacherId: number) => {
     if (!confirm('Are you sure you want to remove this teacher from the project?')) {
       return;
@@ -541,18 +559,26 @@ function ProjectDetailPage() {
                           ) : (
                             <Badge variant="yellow">Pending</Badge>
                           )}
-                        </td>
+                        </td>                 
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          {/* Show accept button for assigned teacher */}
                           {isTeacher && user?.id === teacher.teacher && !teacher.accepted && (
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              onClick={() => handleAcceptAssignment(teacher.id)}
-                              className="mr-2"
-                            >
-                              Accept
-                            </Button>
+                            <>
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={() => handleAcceptAssignment(teacher.id)}
+                                className="mr-2"
+                              >
+                                Accept
+                              </Button>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => handleDeclineAssignment(teacher.id)}
+                              >
+                                Decline
+                              </Button>
+                            </>
                           )}
                           
                           {/* Show remove button for project owner or admin */}
@@ -611,7 +637,7 @@ function ProjectDetailPage() {
             </Link>
           )}
           
-          <Link href={`/projects/${projectId}`} target="_blank">
+          <Link href={`/projects-public/${projectId}`} target="_blank">
             <Button variant="outline">
               View Public Page
             </Button>

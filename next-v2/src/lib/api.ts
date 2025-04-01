@@ -432,6 +432,14 @@ export const projectTeachersApi = {
     
     return handleResponse<ProjectTeacher>(response);
   },
+
+  async declineAssignment(id: number) {
+    const response = await fetchWithAuth(`${API_URL}/project-teachers/${id}/decline/`, {
+      method: 'POST',
+    });
+    
+    return handleResponse<{ detail: string }>(response);
+  },
   
   async removeTeacher(id: number) {
     const response = await fetchWithAuth(`${API_URL}/project-teachers/${id}/`, {

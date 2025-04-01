@@ -337,7 +337,28 @@ class ProjectTeacherViewSet(viewsets.ModelViewSet):
         
         serializer = self.get_serializer(project_teacher)
         return Response(serializer.data)
-        
+
+    @swagger_auto_schema(
+    method='post',
+    operation_description="Decline a teacher assignment for a project",
+    operation_summary="Decline teacher assignment",
+    responses={
+        200: openapi.Response(
+            description="Assignment declined",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'detail': openapi.Schema(
+                        type=openapi.TYPE_STRING,
+                        description='Status message'
+                    )
+                }
+            )
+        ),
+        403: "Only the assigned teacher can decline this role",
+        404: "Assignment not found"
+    }
+    ) 
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def decline(self, request, pk=None):
         """Action for a teacher to decline their role"""
