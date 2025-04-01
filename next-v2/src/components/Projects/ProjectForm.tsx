@@ -1,0 +1,326 @@
+// src/components/projects/ProjectForm.tsx
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Project, WorkType } from '@/lib/types';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Textarea } from '@/components/ui/Textarea';
+import { Button } from '@/components/ui/Button';
+import { FileUpload } from '@/components/ui/FileUpload';
+import { Alert } from '@/components/ui/Alert';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+
+interface ProjectFormProps {
+  initialData?: Partial<Project>;
+  onSubmit: (data: Partial<Project>) => Promise<void>;
+  isLoading?: boolean;
+}
+
+export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: ProjectFormProps) {
+  const [formData, setFormData] = useState<Partial<Project>>({
+    title: '',
+    description: '',
+    year: new Date().getFullYear(),
+    field: '',
+    keywords: [],
+    type_of_work: 'SOČ',
+    public_visibility: false,
+    ...initialData,
+  });
+  
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [keywordInput, setKeywordInput] = useState('');
+  
+  useEffect(() => {
+    if (Object.keys(initialData).length > 0) {
+      setFormData({
+        title: '',
+        description: '',
+        year: new Date().getFullYear(),
+        field: '',
+        keywords: [],
+        type_of_work: 'SOČ',
+        public_visibility: false,
+        ...initialData,
+      });
+    }
+  }, [initialData]);
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.title?.trim()) {
+      newErrors.title = 'Title is required';
+    }
+    
+    if (!formData.description?.trim()) {
+      newErrors.description = 'Description is required';
+    }
+    
+    if (!formData.field?.trim()) {
+      newErrors.field = 'Field is required';
+    }
+    
+    if (!formData.year) {
+      newErrors.year = 'Year is required';
+    } else if (
+      typeof formData.year === 'number' && 
+      (formData.year < 2000 || formData.year > new Date().getFullYear() + 1)
+    ) {
+      newErrors.year = `Year must be between 2000 and ${new Date().getFullYear() + 1}`;
+    }
+    
+    if (!formData.keywords || formData.keywords.length === 0) {
+      newErrors.keywords = 'At least one keyword is required';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    
+    if (type === 'checkbox') {
+      const target = e.target as HTMLInputElement;
+      setFormData((prev) => ({ ...prev, [name]: target.checked }));
+    } else if (name === 'year') {
+      setFormData((prev) => ({ ...prev, [name]: parseInt(value) }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleAddKeyword = () => {
+    if (!keywordInput.trim()) return;
+    
+    const newKeywords = [...(formData.keywords || [])];
+    
+    if (!newKeywords.includes(keywordInput.trim())) {
+      newKeywords.push(keywordInput.trim());
+      setFormData((prev) => ({ ...prev, keywords: newKeywords }));
+      setKeywordInput('');
+    }
+  };
+
+  const handleRemoveKeyword = (keyword: string) => {
+    const newKeywords = (formData.keywords || []).filter((k) => k !== keyword);
+    setFormData((prev) => ({ ...prev, keywords: newKeywords }));
+  };
+
+  const handleFileUpload = (field: string) => (filePath: string) => {
+    setFormData((prev) => ({ ...prev, [field]: filePath }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    await onSubmit(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="col-span-1 md:col-span-2">
+          <Input
+            label="Project Title"
+            name="title"
+            value={formData.title || ''}
+            onChange={handleInputChange}
+            error={errors.title}
+            fullWidth
+            required
+          />
+        </div>
+
+        <div className="col-span-1 md:col-span-2">
+          <Textarea
+            label="Description"
+            name="description"
+            value={formData.description || ''}
+            onChange={handleInputChange}
+            error={errors.description}
+            rows={5}
+            fullWidth
+            required
+          />
+        </div>
+
+        <div>
+          <Input
+            label="Year"
+            name="year"
+            type="number"
+            min={2000}
+            max={new Date().getFullYear() + 1}
+            value={formData.year?.toString() || ''}
+            onChange={handleInputChange}
+            error={errors.year}
+            fullWidth
+            required
+          />
+        </div>
+
+        <div>
+          <Select
+            label="Type of Work"
+            name="type_of_work"
+            value={formData.type_of_work || 'SOČ'}
+            onChange={handleInputChange}
+            options={[
+              { value: 'SOČ', label: 'Středoškolská odborná činnost' },
+              { value: 'seminar', label: 'Seminární práce' },
+              { value: 'other', label: 'Jiný typ práce' },
+            ]}
+            fullWidth
+            required
+          />
+        </div>
+
+        <div className="col-span-1 md:col-span-2">
+          <Input
+            label="Field"
+            name="field"
+            value={formData.field || ''}
+            onChange={handleInputChange}
+            error={errors.field}
+            fullWidth
+            required
+          />
+        </div>
+
+        <div className="col-span-1 md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Keywords {errors.keywords && <span className="text-red-500">({errors.keywords})</span>}
+          </label>
+          <div className="flex">
+            <Input
+              placeholder="Add keyword..."
+              value={keywordInput}
+              onChange={(e) => setKeywordInput(e.target.value)}
+              className="rounded-r-none"
+              fullWidth
+            />
+            <Button
+              type="button"
+              onClick={handleAddKeyword}
+              className="rounded-l-none"
+              disabled={!keywordInput.trim()}
+            >
+              Add
+            </Button>
+          </div>
+          
+          {formData.keywords && formData.keywords.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              {formData.keywords.map((keyword) => (
+                <div
+                  key={keyword}
+                  className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm flex items-center"
+                >
+                  {keyword}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveKeyword(keyword)}
+                    className="ml-1.5 text-blue-600 hover:text-blue-800"
+                  >
+                    <XMarkIcon className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="col-span-1 md:col-span-2">
+          <div className="flex items-center">
+            <input
+              id="public_visibility"
+              name="public_visibility"
+              type="checkbox"
+              checked={formData.public_visibility || false}
+              onChange={(e) => setFormData((prev) => ({ ...prev, public_visibility: e.target.checked }))}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label htmlFor="public_visibility" className="ml-2 block text-sm text-gray-900">
+              Make this project publicly visible
+            </label>
+          </div>
+        </div>
+
+        <div className="col-span-1 md:col-span-2">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Project Files</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <FileUpload
+                label="Thumbnail Image"
+                type="thumbnail"
+                onUploadComplete={handleFileUpload('thumbnail')}
+                accept="image/jpeg,image/png,image/gif"
+                currentFile={formData.thumbnail}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                Square image recommended for best display (max 10MB)
+              </p>
+            </div>
+            
+            <div>
+              <FileUpload
+                label="Project Document"
+                type="document"
+                onUploadComplete={handleFileUpload('document')}
+                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                currentFile={formData.document}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                Upload your full project document (PDF, DOC, DOCX)
+              </p>
+            </div>
+            
+            <div>
+              <FileUpload
+                label="Project Poster"
+                type="poster"
+                onUploadComplete={handleFileUpload('poster')}
+                accept="image/jpeg,image/png,application/pdf"
+                currentFile={formData.poster}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                Upload a poster or presentation image
+              </p>
+            </div>
+            
+            <div>
+              <FileUpload
+                label="Project Video"
+                type="video"
+                onUploadComplete={handleFileUpload('video')}
+                accept="video/mp4,video/webm,video/ogg"
+                currentFile={formData.video}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                Upload a video presentation of your project
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-4 flex justify-end space-x-3 border-t">
+        <Button
+          type="submit"
+          variant="primary"
+          isLoading={isLoading}
+          disabled={isLoading}
+        >
+          {initialData.id ? 'Update Project' : 'Create Project'}
+        </Button>
+      </div>
+    </form>
+  );
+}
