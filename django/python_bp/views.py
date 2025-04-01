@@ -129,7 +129,6 @@ def public_project_detail(request, pk):
     serializer = ProjectDetailSerializer(project)
     return Response(serializer.data)
 
-
 class ProjectViewSet(viewsets.ModelViewSet):
     """
     ViewSet for managing projects. 
@@ -161,17 +160,20 @@ class ProjectViewSet(viewsets.ModelViewSet):
         """
         user = self.request.user
         
-        if user.role == 'admin':
+        # Force evaluation of user role to ensure it's properly detected
+        user_role = getattr(user, 'role', None)
+        
+        if user_role == 'admin':
             # Administrators see all non-deleted projects
             queryset = Project.objects.filter(deleted=False)
-        elif user.role == 'teacher':
+        elif user_role == 'teacher':
             # Teachers see projects where they're assigned and public projects
             teacher_projects = ProjectTeacher.objects.filter(teacher=user).values_list('project_id', flat=True)
             queryset = Project.objects.filter(
                 Q(id__in=teacher_projects) | Q(public_visibility=True),
                 deleted=False
             )
-        else:  # student
+        else:  # student or any other role
             # Students see their own projects and public projects
             queryset = Project.objects.filter(
                 Q(student=user) | Q(public_visibility=True),
