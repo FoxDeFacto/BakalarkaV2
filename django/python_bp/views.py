@@ -14,7 +14,7 @@ from .serializer import (
     ProjectDetailSerializer, ProjectCreateUpdateSerializer, ProjectTeacherSerializer,
     MilestoneSerializer, CommentSerializer, ConsultationSerializer, ProjectEvaluationSerializer
 )
-from .permissions import IsTeacherOrAdminOrReadOnly, IsTeacherForProject, IsOwnerOrTeacherOrReadOnly
+from .permissions import IsTeacherOrAdminOrReadOnly, IsTeacherForProject, IsOwnerOrTeacherOrReadOnly, StudentCanAssignTeacherPermission
 
 
 
@@ -299,7 +299,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 class ProjectTeacherViewSet(viewsets.ModelViewSet):
     queryset = ProjectTeacher.objects.all()
     serializer_class = ProjectTeacherSerializer
-    permission_classes = [permissions.IsAuthenticated, IsTeacherOrAdminOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, StudentCanAssignTeacherPermission]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['project', 'teacher', 'role', 'accepted']
 
@@ -308,14 +308,14 @@ class ProjectTeacherViewSet(viewsets.ModelViewSet):
         if user.role == 'admin':
             return ProjectTeacher.objects.all()
         elif user.role == 'teacher':
-            # Učitelé vidí všechny vazby, kde jsou jako učitelé, a vazby na veřejné projekty
+            # Teachers see all relationships where they are teachers and relationships for public projects
             teacher_projects = ProjectTeacher.objects.filter(teacher=user).values_list('project_id', flat=True)
             public_projects = Project.objects.filter(public_visibility=True).values_list('id', flat=True)
             return ProjectTeacher.objects.filter(
                 Q(teacher=user) | Q(project_id__in=public_projects)
             )
         else:  # student
-            # Studenti vidí učitele na jejich projektech a na veřejných projektech
+            # Students see teachers on their projects and on public projects
             student_projects = Project.objects.filter(student=user).values_list('id', flat=True)
             public_projects = Project.objects.filter(public_visibility=True).values_list('id', flat=True)
             return ProjectTeacher.objects.filter(
@@ -324,12 +324,12 @@ class ProjectTeacherViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def accept(self, request, pk=None):
-        """Akce pro přijetí role učitelem"""
+        """Action for a teacher to accept their role"""
         project_teacher = self.get_object()
         
-        # Pouze učitel, který je přiřazen, může přijmout roli
+        # Only the assigned teacher can accept the role
         if request.user.id != project_teacher.teacher.id:
-            return Response({"detail": "Pouze přiřazený učitel může přijmout roli."}, 
+            return Response({"detail": "Only the assigned teacher can accept this role."}, 
                           status=status.HTTP_403_FORBIDDEN)
         
         project_teacher.accepted = True
@@ -337,6 +337,22 @@ class ProjectTeacherViewSet(viewsets.ModelViewSet):
         
         serializer = self.get_serializer(project_teacher)
         return Response(serializer.data)
+        
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def decline(self, request, pk=None):
+        """Action for a teacher to decline their role"""
+        project_teacher = self.get_object()
+        
+        # Only the assigned teacher can decline the role
+        if request.user.id != project_teacher.teacher.id:
+            return Response({"detail": "Only the assigned teacher can decline this role."}, 
+                          status=status.HTTP_403_FORBIDDEN)
+        
+        # Delete the assignment instead of just marking it as declined
+        project_teacher.delete()
+        
+        return Response({"detail": "Assignment declined and removed."}, 
+                      status=status.HTTP_200_OK)
 
 
 class MilestoneViewSet(viewsets.ModelViewSet):

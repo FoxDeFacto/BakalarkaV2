@@ -115,3 +115,58 @@ class IsOwnerOrTeacherOrReadOnly(permissions.BasePermission):
             ).exists()
         
         return False
+    
+
+class StudentCanAssignTeacherPermission(permissions.BasePermission):
+    """
+    Permission that allows:
+    - Students to create teacher assignments for their own projects
+    - Teachers to accept/reject assignments
+    - Admins to have full access
+    """
+    def has_permission(self, request, view):
+        # Read operations allowed for authenticated users
+        if request.method in permissions.SAFE_METHODS:
+            return request.user.is_authenticated
+
+        # POST requests (creating new assignments)
+        if request.method == 'POST':
+            # Admins can create any assignment
+            if request.user.role == 'admin':
+                return True
+                
+            # For students, check if they own the project
+            if request.user.role == 'student':
+                project_id = request.data.get('project')
+                if project_id:
+                    try:
+                        project = Project.objects.get(id=project_id)
+                        return project.student == request.user
+                    except Project.DoesNotExist:
+                        return False
+                return False
+                
+            # Teachers can create assignments too (e.g., volunteering)
+            return request.user.role == 'teacher'
+            
+        # For other methods (PUT, PATCH, DELETE), defer to has_object_permission
+        return True
+    
+    def has_object_permission(self, request, view, obj):
+        # Read operations always allowed
+        if request.method in permissions.SAFE_METHODS:
+            return True
+            
+        # Admins have full access
+        if request.user.role == 'admin':
+            return True
+            
+        # Students can only modify assignments for their own projects
+        if request.user.role == 'student':
+            return obj.project.student == request.user
+            
+        # Teachers can modify assignments where they are the teacher
+        if request.user.role == 'teacher':
+            return obj.teacher == request.user
+            
+        return False
