@@ -160,9 +160,9 @@ function AssignedProjectsPage() {
                 d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 className="mt-2 text-lg font-medium text-gray-900">No assigned projects</h3>
+            <h3 className="mt-2 text-lg font-medium text-gray-900">Bez přiřezených projektů</h3>
             <p className="mt-1 text-sm text-gray-500">
-              You have not been assigned to any projects yet.
+              Zatím nemáte přiřezené žádné projekty.
             </p>
           </div>
         ) : (
@@ -170,25 +170,25 @@ function AssignedProjectsPage() {
             {roleDisplayOrder.map(({ key, display }) => (
               projectsByRole[key] && projectsByRole[key].length > 0 && (
                 <div key={key}>
-                  <h2 className="text-lg font-medium text-gray-900 mb-4">Projects as {display}</h2>
+                  <h2 className="text-lg font-medium text-gray-900 mb-4">Projecty jako {display}</h2>
                   <div className="overflow-x-auto bg-white shadow rounded-lg">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Title
+                            Název
                           </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Student
                           </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
+                            Stav
                           </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Assignment Status
+                            Druh přiřazení
                           </th>
                           <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
+                            Akce
                           </th>
                         </tr>
                       </thead>
@@ -214,19 +214,19 @@ function AssignedProjectsPage() {
                               <td className="px-6 py-4 whitespace-nowrap">
                                 {assignment ? (
                                   assignment.accepted ? (
-                                    <Badge variant="green">Accepted</Badge>
+                                    <Badge variant="green">Přijato</Badge>
                                   ) : (
-                                    <Badge variant="yellow">Pending</Badge>
+                                    <Badge variant="yellow">Čeká</Badge>
                                   )
                                 ) : (
-                                  <Badge variant="gray">Unknown</Badge>
+                                  <Badge variant="gray">Neznámé</Badge>
                                 )}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div className="flex justify-end space-x-2">
                                   <Link href={`/dashboard/projects/${project.id}`}>
                                     <Button variant="outline" size="sm">
-                                      View
+                                      Zobrazit
                                     </Button>
                                   </Link>
                                   
@@ -236,7 +236,7 @@ function AssignedProjectsPage() {
                                       size="sm"
                                       onClick={() => handleAcceptAssignment(assignment.id)}
                                     >
-                                      Accept
+                                      Příjmout
                                     </Button>
                                   )}
                                 </div>

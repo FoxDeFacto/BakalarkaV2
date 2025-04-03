@@ -155,7 +155,7 @@ function EvaluationsPage() {
           <Alert variant="danger" title="Error" message={error || 'Project not found'} />
           <div className="mt-4">
             <Link href="/dashboard/projects">
-              <Button variant="primary">Back to Projects</Button>
+              <Button variant="primary">Zpátky</Button>
             </Link>
           </div>
         </div>
@@ -173,9 +173,9 @@ function EvaluationsPage() {
               className="inline-flex items-center text-blue-600 hover:text-blue-800"
             >
               <ChevronLeftIcon className="h-5 w-5 mr-1" />
-              Back to Project
+              Zpátky
             </Link>
-            <h1 className="text-2xl font-semibold text-gray-900 mt-2">Evaluations for {project.title}</h1>
+            <h1 className="text-2xl font-semibold text-gray-900 mt-2">Hodnocení pro {project.title}</h1>
           </div>
           
           {(isTeacher || isAdmin) && canBeEvaluated && !hasSubmittedEvaluation && (
@@ -185,7 +185,7 @@ function EvaluationsPage() {
               onClick={handleCreateEvaluation}
             >
               <PlusIcon className="h-4 w-4 mr-1" />
-              Add Evaluation
+              Přidat hodnocení
             </Button>
           )}
         </div>
@@ -216,9 +216,9 @@ function EvaluationsPage() {
           <Card className="mb-6">
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div>
-                <h2 className="text-lg font-medium text-gray-900">Evaluation Summary</h2>
+                <h2 className="text-lg font-medium text-gray-900">Shrnutí hodnocení</h2>
                 <p className="text-sm text-gray-500">
-                  {evaluations.length} evaluation{evaluations.length !== 1 ? 's' : ''} submitted
+                  {evaluations.length} Hodnocení odevzdáno
                 </p>
               </div>
               <div className="mt-4 md:mt-0">
@@ -226,7 +226,7 @@ function EvaluationsPage() {
                   <div className="text-2xl font-bold text-blue-600">{calculateAverageScore()}</div>
                   <div className="text-sm text-gray-500 ml-1">/100</div>
                 </div>
-                <p className="text-sm text-gray-500 text-center">Average Score</p>
+                <p className="text-sm text-gray-500 text-center">Průměrné body</p>
               </div>
             </div>
           </Card>
@@ -248,7 +248,7 @@ function EvaluationsPage() {
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <h3 className="mt-2 text-lg font-medium text-gray-900">No evaluations found</h3>
+            <h3 className="mt-2 text-lg font-medium text-gray-900">Bez hodnocení</h3>
             <p className="mt-1 text-sm text-gray-500">
               {canBeEvaluated 
                 ? (isTeacher || isAdmin)
@@ -263,7 +263,7 @@ function EvaluationsPage() {
               <div className="mt-6">
                 <Button variant="primary" onClick={handleCreateEvaluation}>
                   <PlusIcon className="h-4 w-4 mr-1 inline" />
-                  Submit Evaluation
+                  Odeslat hodnocení
                 </Button>
               </div>
             )}
@@ -323,7 +323,7 @@ function EvaluationsPage() {
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title={isEditMode ? 'Edit Evaluation' : 'Submit Evaluation'}
+          title={isEditMode ? 'Upravit hodnocení' : 'Odeslat hodnocení'}
           size="md"
         >
           <EvaluationForm

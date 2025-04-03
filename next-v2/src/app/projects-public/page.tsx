@@ -18,8 +18,8 @@ export default function PublicProjectsPage() {
   const [page, setPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(false);
 
-  // Use useCallback to ensure fetchProjects doesn't change on every render
-  const fetchProjects = useCallback(async (pageNum = 1, newFilters: ProjectFilters = filters) => {
+  // Fetch projects with the provided filters and page number
+  const fetchProjects = useCallback(async (pageNum: number, newFilters: ProjectFilters) => {
     setLoading(true);
     setError(null);
 
@@ -48,15 +48,15 @@ export default function PublicProjectsPage() {
       }
       
       setTotalProjects(response.count);
-      setHasMorePages(response.results.length === 20 && response.count > page * 20);
+      setHasMorePages(response.results.length === 20 && response.count > pageNum * 20);
       setPage(pageNum);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load projects');
+      setError(err instanceof Error ? err.message : 'Nepodařilo se načíst projekty');
       console.error('Error fetching projects:', err);
     } finally {
       setLoading(false);
     }
-  }, [filters, page]);
+  }, []);  // No dependencies - this function doesn't need to change
 
   // Initial load - only run once
   useEffect(() => {
@@ -65,19 +65,21 @@ export default function PublicProjectsPage() {
 
   const handleFilterChange = useCallback((newFilters: ProjectFilters) => {
     setFilters(newFilters);
+    // Directly use newFilters instead of relying on state update
     fetchProjects(1, newFilters);
   }, [fetchProjects]);
 
   const handleLoadMore = useCallback(() => {
-    fetchProjects(page + 1);
-  }, [fetchProjects, page]);
+    // Always use the current filters from state
+    fetchProjects(page + 1, filters);
+  }, [fetchProjects, page, filters]);  // Include filters as dependency
 
   return (
     <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Public Projects</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Zveřejněné projekty</h1>
         <p className="mt-2 text-lg text-gray-600">
-          Browse and explore student research projects and seminar papers available to the public.
+          Prozkoumejte dokončené projekty a seminární práce našich studentů.
         </p>
       </div>
 
@@ -95,7 +97,14 @@ export default function PublicProjectsPage() {
 
           <div className="mb-4">
             <p className="text-sm text-gray-500">
-              {totalProjects} project{totalProjects !== 1 ? 's' : ''} found
+              {totalProjects === 0 
+                ? "Žádný projekt nenalezen" 
+                : totalProjects === 1 
+                  ? "1 projekt nalezen" 
+                  : totalProjects >= 2 && totalProjects <= 4 
+                    ? `${totalProjects} projekty nalezeny` 
+                    : `${totalProjects} projektů nalezeno`
+              }
             </p>
           </div>
 
@@ -105,48 +114,48 @@ export default function PublicProjectsPage() {
             </div>
           ) : projects.length === 0 ? (
             <div className="text-center py-8 bg-white shadow rounded-lg">
-            <svg
-              className="mx-auto h-12 w-12 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <h3 className="mt-2 text-lg font-medium text-gray-900">No projects found</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Try adjusting your filters to find what you are looking for.
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projects.map((project) => (
-                <ProjectCard key={project.id} project={project} isPublic={true} />
-              ))}
+              <svg
+                className="mx-auto h-12 w-12 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h3 className="mt-2 text-lg font-medium text-gray-900">Nebyly nalezeny žádné projekty</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Zkuste upravit filtry k nalezení toho, co hledáte.
+              </p>
             </div>
-
-            {hasMorePages && (
-              <div className="mt-8 flex justify-center">
-                <Button
-                  onClick={handleLoadMore}
-                  variant="outline"
-                  isLoading={loading}
-                  disabled={loading}
-                >
-                  Load More
-                </Button>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {projects.map((project) => (
+                  <ProjectCard key={project.id} project={project} isPublic={true} />
+                ))}
               </div>
-            )}
-          </>
-        )}
+
+              {hasMorePages && (
+                <div className="mt-8 flex justify-center">
+                  <Button
+                    onClick={handleLoadMore}
+                    variant="outline"
+                    isLoading={loading}
+                    disabled={loading}
+                  >
+                    Načíst další
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 }

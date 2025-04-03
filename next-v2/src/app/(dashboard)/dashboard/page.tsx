@@ -84,14 +84,14 @@ function Dashboard() {
   return (
     <DashboardLayout>
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Přehled</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Welcome back, {user?.username}! Here is an overview of your projects and activities.
+          Vítej zpátky, {user?.username}! Taky je přehled Vašich projektů a aktivity.
         </p>
         
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Recent Projects */}
-          <Card title="Recent Projects" className="col-span-1">
+          <Card title="Poslední projekty" className="col-span-1">
             <div className="space-y-4">
               {loading.projects ? (
                 <div className="flex justify-center py-4">
@@ -99,11 +99,11 @@ function Dashboard() {
                 </div>
               ) : recentProjects.length === 0 ? (
                 <div className="text-center py-4">
-                  <p className="text-gray-500">No projects found.</p>
+                  <p className="text-gray-500">Žádné projekty nenalezeny.</p>
                   {isStudent && (
                     <div className="mt-2">
                       <Link href="/dashboard/create-project">
-                        <Button variant="primary" size="sm">Create a Project</Button>
+                        <Button variant="primary" size="sm">Vytvořit project</Button>
                       </Link>
                     </div>
                   )}
@@ -130,14 +130,14 @@ function Dashboard() {
                       <div className="mt-1 text-sm text-gray-500">
                         <div className="flex justify-between">
                           <span>Student: {project.student_name}</span>
-                          <span>Year: {project.year}</span>
+                          <span>Rok: {project.year}</span>
                         </div>
                       </div>
                     </div>
                   ))}
                   <div className="mt-4 text-right">
                     <Link href="/dashboard/projects" className="text-blue-600 hover:text-blue-800 text-sm">
-                      View all projects →
+                      Zobrazit všechny projekty →
                     </Link>
                   </div>
                 </>
@@ -146,7 +146,7 @@ function Dashboard() {
           </Card>
 
           {/* Upcoming Milestones */}
-          <Card title="Upcoming Milestones" className="col-span-1">
+          <Card title="Nadcházející milníky" className="col-span-1">
             <div className="space-y-4">
               {loading.milestones ? (
                 <div className="flex justify-center py-4">
@@ -154,11 +154,11 @@ function Dashboard() {
                 </div>
               ) : upcomingMilestones.length === 0 ? (
                 <div className="text-center py-4">
-                  <p className="text-gray-500">No upcoming milestones.</p>
+                  <p className="text-gray-500">Žádné nadcházející milníky.</p>
                   {isTeacher && (
                     <div className="mt-2">
                       <Link href="/dashboard/milestones">
-                        <Button variant="primary" size="sm">Create a Milestone</Button>
+                        <Button variant="primary" size="sm">Vytvořit milník</Button>
                       </Link>
                     </div>
                   )}
@@ -209,7 +209,7 @@ function Dashboard() {
                   ))}
                   <div className="mt-4 text-right">
                     <Link href="/dashboard/milestones" className="text-blue-600 hover:text-blue-800 text-sm">
-                      View all milestones →
+                     Přehled všech milníků →
                     </Link>
                   </div>
                 </>
@@ -219,7 +219,7 @@ function Dashboard() {
 
           {/* Upcoming Consultations */}
           {(isStudent || isTeacher) && (
-            <Card title="Upcoming Consultations" className="col-span-1 lg:col-span-2">
+            <Card title="Nahcházejí komzultace" className="col-span-1 lg:col-span-2">
               <div className="space-y-4">
                 {loading.consultations ? (
                   <div className="flex justify-center py-4">
@@ -227,11 +227,11 @@ function Dashboard() {
                   </div>
                 ) : upcomingConsultations.length === 0 ? (
                   <div className="text-center py-4">
-                    <p className="text-gray-500">No upcoming consultations.</p>
+                    <p className="text-gray-500">Žádné nadcházející konzultace.</p>
                     {isTeacher && (
                       <div className="mt-2">
                         <Link href="/dashboard/consultations">
-                          <Button variant="primary" size="sm">Schedule a Consultation</Button>
+                          <Button variant="primary" size="sm">Přidat konzultaci</Button>
                         </Link>
                       </div>
                     )}
@@ -242,16 +242,16 @@ function Dashboard() {
                       <thead className="bg-gray-50">
                         <tr>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Date
+                            Datum
                           </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Project
+                            Projekt
                           </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Teacher
+                            Učitel
                           </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Notes
+                            Poznámky
                           </th>
                         </tr>
                       </thead>
@@ -266,14 +266,14 @@ function Dashboard() {
                                 href={`/dashboard/projects/${consultation.project}`}
                                 className="text-blue-600 hover:text-blue-800"
                               >
-                                View Project
+                                Přehled všech projektů
                               </Link>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {consultation.teacher_name}
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-500">
-                              {consultation.notes || <span className="italic">No notes</span>}
+                              {consultation.notes || <span className="italic">Bez poznámek</span>}
                             </td>
                           </tr>
                         ))}

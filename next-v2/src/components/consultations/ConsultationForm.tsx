@@ -55,7 +55,7 @@ export function ConsultationForm({ projectId, initialData = {}, onSubmit, isLoad
       <div className="grid grid-cols-1 gap-6">
         <div>
           <Input
-            label="Consultation Date and Time"
+            label="Datum a čas konzultace"
             name="consultation_date"
             type="datetime-local"
             value={formData.consultation_date ? formData.consultation_date.toString().slice(0, 16) : ''}
@@ -68,7 +68,7 @@ export function ConsultationForm({ projectId, initialData = {}, onSubmit, isLoad
 
         <div>
           <Textarea
-            label="Notes"
+            label="Poznámky"
             name="notes"
             value={formData.notes || ''}
             onChange={handleInputChange}

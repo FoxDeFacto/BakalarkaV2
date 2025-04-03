@@ -80,7 +80,7 @@ function EditProjectPage() {
           <Alert variant="danger" title="Error" message={error || 'Project not found'} />
           <div className="mt-4">
             <Link href="/dashboard/projects">
-              <Button variant="primary">Back to Projects</Button>
+              <Button variant="primary">Zpátky</Button>
             </Link>
           </div>
         </div>
@@ -97,11 +97,11 @@ function EditProjectPage() {
             className="inline-flex items-center text-blue-600 hover:text-blue-800"
           >
             <ChevronLeftIcon className="h-5 w-5 mr-1" />
-            Back to Project
+            Zpátky
           </Link>
         </div>
         
-        <h1 className="text-2xl font-semibold text-gray-900 mb-6">Edit Project</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 mb-6">Upravit projekt</h1>
         
         {error && (
           <div className="mb-4">

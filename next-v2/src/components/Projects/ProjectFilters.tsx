@@ -16,17 +16,12 @@ interface ProjectFiltersProps {
 export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectFiltersProps) {
   const [filters, setFilters] = useState<FilterTypes>(initialFilters);
   const [keywordInput, setKeywordInput] = useState('');
-  //const initialRenderRef = useRef(true);
 
   // Set initial filters state from props, but only on initial mount
   useEffect(() => {
-    if (Object.keys(initialFilters).length > 0) {
-      setFilters(initialFilters);
-    }
-  }, [initialFilters]);
+    setFilters(initialFilters);
+  }, []);  // Only run once on mount
 
-  // Only call onFilterChange when filters change due to user interaction,
-  // not during initial render or when props change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     const newFilters = { ...filters, [name]: value || undefined };
@@ -60,25 +55,27 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
   };
 
   const handleApplyFilters = () => {
+    // Directly pass the current filters state
     onFilterChange(filters);
   };
 
   const handleResetFilters = () => {
-    setFilters({});
+    const emptyFilters = {};
+    setFilters(emptyFilters);
     setKeywordInput('');
-    onFilterChange({});
+    onFilterChange(emptyFilters);
   };
 
   return (
     <div className="bg-white p-4 shadow rounded-lg">
-      <h3 className="text-lg font-medium mb-4">Filter Projects</h3>
+      <h3 className="text-lg font-medium mb-4">Vyhledávání</h3>
       
       <div className="space-y-4">
         <div>
           <Input
-            label="Search"
+            label="Hledat"
             name="search"
-            placeholder="Search by title, description..."
+            placeholder="Název, popis......"
             value={filters.search || ''}
             onChange={handleInputChange}
             fullWidth
@@ -87,12 +84,12 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
         
         <div>
           <Select
-            label="Year"
+            label="Rok"
             name="year"
             value={filters.year?.toString() || ''}
             onChange={handleInputChange}
             options={[
-              { value: '', label: 'All Years' },
+              { value: '', label: 'Všechny roky' },
               ...Array.from({ length: 10 }, (_, i) => {
                 const year = new Date().getFullYear() - i;
                 return { value: year.toString(), label: year.toString() };
@@ -104,12 +101,12 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
         
         <div>
           <Select
-            label="Field"
+            label="Oblast"
             name="field"
             value={filters.field || ''}
             onChange={handleInputChange}
             options={[
-              { value: '', label: 'All Fields' },
+              { value: '', label: 'Všechny oblasti' },
               { value: 'Computer Science', label: 'Computer Science' },
               { value: 'Biology', label: 'Biology' },
               { value: 'Chemistry', label: 'Chemistry' },
@@ -127,12 +124,12 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
         
         <div>
           <Select
-            label="Status"
+            label="Stav"
             name="status"
             value={filters.status || ''}
             onChange={handleInputChange}
             options={[
-              { value: '', label: 'All Statuses' },
+              { value: '', label: 'Všechny stavy' },
               { value: 'draft', label: 'Draft' },
               { value: 'in_progress', label: 'In Progress' },
               { value: 'submitted', label: 'Submitted' },
@@ -145,12 +142,12 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
         
         <div>
           <Select
-            label="Type of Work"
+            label="Druh práce"
             name="type_of_work"
             value={filters.type_of_work || ''}
             onChange={handleInputChange}
             options={[
-              { value: '', label: 'All Types' },
+              { value: '', label: 'Všechny druhy' },
               { value: 'SOČ', label: 'Středoškolská odborná činnost' },
               { value: 'seminar', label: 'Seminární práce' },
               { value: 'other', label: 'Jiný typ práce' },
@@ -163,9 +160,9 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Keywords
           </label>
-          <div className="flex">
+          <div className="flex gap-2">
             <Input
-              placeholder="Add keyword..."
+              placeholder="Klíčové slovo..."
               value={keywordInput}
               onChange={(e) => setKeywordInput(e.target.value)}
               className="rounded-r-none"
@@ -177,7 +174,7 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
               className="rounded-l-none"
               disabled={!keywordInput.trim()}
             >
-              Add
+              Přidat
             </Button>
           </div>
           
@@ -209,7 +206,7 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
             onClick={handleApplyFilters}
             fullWidth
           >
-            Apply Filters
+            Použít
           </Button>
           <Button
             type="button"

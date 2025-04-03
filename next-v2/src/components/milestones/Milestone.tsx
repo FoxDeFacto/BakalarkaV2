@@ -72,7 +72,7 @@ export function MilestoneForm({ projectId, initialData = {}, onSubmit, isLoading
       <div className="grid grid-cols-1 gap-6">
         <div>
           <Input
-            label="Milestone Title"
+            label="Název milníku"
             name="title"
             value={formData.title || ''}
             onChange={handleInputChange}
@@ -84,7 +84,7 @@ export function MilestoneForm({ projectId, initialData = {}, onSubmit, isLoading
 
         <div>
           <Textarea
-            label="Description"
+            label="Popis"
             name="description"
             value={formData.description || ''}
             onChange={handleInputChange}
@@ -97,7 +97,7 @@ export function MilestoneForm({ projectId, initialData = {}, onSubmit, isLoading
 
         <div>
           <Input
-            label="Deadline"
+            label="Lhůta"
             name="deadline"
             type="datetime-local"
             value={formData.deadline ? formData.deadline.toString().slice(0, 16) : ''}
@@ -110,15 +110,15 @@ export function MilestoneForm({ projectId, initialData = {}, onSubmit, isLoading
 
         <div>
           <Select
-            label="Status"
+            label="Stav"
             name="status"
             value={formData.status || 'not_started'}
             onChange={handleInputChange}
             options={[
-              { value: 'not_started', label: 'Not Started' },
-              { value: 'in_progress', label: 'In Progress' },
-              { value: 'completed', label: 'Completed' },
-              { value: 'overdue', label: 'Overdue' },
+              { value: 'not_started', label: 'Nezačal' },
+              { value: 'in_progress', label: 'Rozpracováno' },
+              { value: 'completed', label: 'Dokočeno' },
+              { value: 'overdue', label: 'Přetahuje' },
             ]}
             fullWidth
           />
@@ -126,7 +126,7 @@ export function MilestoneForm({ projectId, initialData = {}, onSubmit, isLoading
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Completion ({formData.completion || 0}%)
+            Dokončení ({formData.completion || 0}%)
           </label>
           <input
             type="range"

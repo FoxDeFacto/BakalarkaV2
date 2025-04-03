@@ -99,7 +99,7 @@ export default function PublicProjectDetailPage() {
         />
         <div className="mt-4">
           <Link href="/projects-public" className="text-blue-600 hover:text-blue-800">
-            ← Back to projects
+            ← Zpět
           </Link>
         </div>
       </div>
@@ -129,7 +129,7 @@ export default function PublicProjectDetailPage() {
       <div className="mb-6">
         <Link href="/projects-public" className="inline-flex items-center text-blue-600 hover:text-blue-800">
           <ChevronLeftIcon className="h-5 w-5 mr-1" />
-          Back to projects
+          Zpět
         </Link>
       </div>
 
@@ -172,20 +172,20 @@ export default function PublicProjectDetailPage() {
 
           {/* Description */}
           <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-2">Description</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-2">Popis</h2>
             <p className="text-gray-700 whitespace-pre-line">{project.description}</p>
           </div>
 
           {/* Field and keywords */}
           <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-2">Field & Keywords</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-2">Oblast & Klíčová slova</h2>
             <div className="flex flex-col space-y-2">
               <div>
-                <span className="text-gray-500">Field: </span>
+                <span className="text-gray-500">Obor: </span>
                 <span className="text-gray-900">{project.field}</span>
               </div>
               <div>
-                <span className="text-gray-500">Keywords: </span>
+                <span className="text-gray-500">Klíčová slova: </span>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {project.keywords.map((keyword, i) => (
                     <Badge key={i} variant="gray" size="sm">
@@ -199,7 +199,7 @@ export default function PublicProjectDetailPage() {
 
           {/* Files */}
           <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-2">Project Files</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-2">Soubory</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {project.document && (
                 <a
@@ -245,7 +245,7 @@ export default function PublicProjectDetailPage() {
                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <span>Poster</span>
+                  <span>Plagát</span>
                 </a>
               )}
 
@@ -278,7 +278,7 @@ export default function PublicProjectDetailPage() {
           {/* Teachers */}
           {project.teachers && project.teachers.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-2">Project Teachers</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-2">Učitelé</h2>
               <div className="space-y-3">
                 {project.teachers.map((teacher) => (
                   <div key={teacher.id} className="flex items-start">
@@ -297,7 +297,7 @@ export default function PublicProjectDetailPage() {
 
           {/* Comments section */}
           <div className="mt-8">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Comments</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Komentáře</h2>
             
             {/* Add comment form if authenticated */}
             {isAuthenticated ? (
@@ -323,7 +323,7 @@ export default function PublicProjectDetailPage() {
                     isLoading={submittingComment}
                     disabled={submittingComment || !commentText.trim()}
                   >
-                    Post Comment
+                    Přidat komentář
                   </Button>
                 </div>
               </form>
@@ -331,9 +331,9 @@ export default function PublicProjectDetailPage() {
               <div className="mb-6 bg-gray-50 p-4 rounded-md">
                 <p className="text-gray-700">
                   <Link href="/login" className="text-blue-600 hover:text-blue-800">
-                    Log in
+                    Přihlášení
                   </Link>
-                  {' '}to add a comment.
+                  {' '} pro přidání komentáře.
                 </p>
               </div>
             )}
@@ -382,7 +382,7 @@ export default function PublicProjectDetailPage() {
                     ))}
                 </div>
               ) : (
-                <p className="text-gray-500 italic">No comments yet.</p>
+                <p className="text-gray-500 italic">Zatím bez komentářů.</p>
               )}
           </div>
           
@@ -395,7 +395,7 @@ export default function PublicProjectDetailPage() {
                 {user?.role === 'teacher' && (
                   <Link href={`/dashboard/assigned`}>
                     <Button variant="outline">
-                      Manage Assigned Projects
+                      Správa přiřazených projektů
                     </Button>
                   </Link>
                 )}

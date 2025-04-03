@@ -84,7 +84,7 @@ function EvaluationsDashboardPage() {
   return (
     <DashboardLayout>
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900 mb-6">Project Evaluations</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 mb-6">Hodnocení</h1>
         
         {error && (
           <Alert variant="danger" message={error} />
@@ -109,13 +109,13 @@ function EvaluationsDashboardPage() {
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <h3 className="mt-2 text-lg font-medium text-gray-900">No evaluations found</h3>
+            <h3 className="mt-2 text-lg font-medium text-gray-900">Bez hodnocení</h3>
             <p className="mt-1 text-sm text-gray-500">
-              You have not submitted any evaluations yet.
+              Zatím jste nepřidali žádné hodnocení
             </p>
             <div className="mt-6">
               <Link href="/dashboard/projects">
-                <Button variant="primary">Browse Projects</Button>
+                <Button variant="primary">Procházet projekty</Button>
               </Link>
             </div>
           </div>
@@ -136,12 +136,12 @@ function EvaluationsDashboardPage() {
                     <div>
                       <h2 className="text-lg font-medium text-gray-900">{project.title}</h2>
                       <div className="text-sm text-gray-500">
-                        Student: {project.student_name} | Type: {project.type_display}
+                        Student: {project.student_name} | Druh: {project.type_display}
                       </div>
                     </div>
                     <div className="flex items-center">
                       <div className="mr-4">
-                        <div className="text-xs text-gray-500 uppercase">Average Score</div>
+                        <div className="text-xs text-gray-500 uppercase">Průměrné hodnocené</div>
                         <div className="text-2xl font-bold text-blue-600">{averageScore}<span className="text-sm text-gray-500">/100</span></div>
                       </div>
                       <Badge variant={
@@ -155,7 +155,7 @@ function EvaluationsDashboardPage() {
                   </div>
                   <div className="p-6">
                     <div className="mb-4">
-                      <h3 className="text-md font-medium text-gray-900 mb-2">Evaluations ({projectEvaluations.length})</h3>
+                      <h3 className="text-md font-medium text-gray-900 mb-2">Hodnocení ({projectEvaluations.length})</h3>
                       <div className="space-y-4">
                         {projectEvaluations.map(evaluation => {
                           const isMyEvaluation = user && evaluation.teacher === user.id;
@@ -198,13 +198,13 @@ function EvaluationsDashboardPage() {
                     
                     <div className="flex justify-between mt-4 pt-4 border-t border-gray-200">
                       <Link href={`/dashboard/projects/${projectId}`}>
-                        <Button variant="outline">View Project</Button>
+                        <Button variant="outline">Zobrazit projekt</Button>
                       </Link>
                       
                       <div className="flex space-x-2">
                         <Link href={`/dashboard/projects/${projectId}/evaluations`}>
                           <Button variant="primary">
-                            View All Evaluations
+                            Zobrazit všechny hodnocení
                           </Button>
                         </Link>
                         
@@ -212,13 +212,13 @@ function EvaluationsDashboardPage() {
                           <Link href={`/dashboard/projects/${projectId}/evaluations`}>
                             <Button variant="outline" className="inline-flex items-center">
                               <PencilIcon className="h-4 w-4 mr-1" />
-                              Edit My Evaluation
+                              Upravit moje hodnocení
                             </Button>
                           </Link>
                         ) : (
                           <Link href={`/dashboard/projects/${projectId}/evaluations`}>
                             <Button variant="outline">
-                              Add Evaluation
+                              Přidat hodnocení
                             </Button>
                           </Link>
                         )}

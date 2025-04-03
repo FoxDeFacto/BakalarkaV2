@@ -40,9 +40,9 @@ function ProfilePage() {
       // For now, let's simulate a successful update
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      setSuccess('Profile updated successfully');
+      setSuccess('Účet úspěšně upraven');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
+      setError(err instanceof Error ? err.message : 'Chyba při úpravě účtu');
     } finally {
       setUpdating(false);
     }
@@ -59,7 +59,7 @@ function ProfilePage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Your Profile</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Váš účet</h1>
         
         {success && (
           <Alert variant="success" message={success} />
@@ -72,15 +72,15 @@ function ProfilePage() {
         {/* Profile Information Card */}
         <Card>
           <div className="p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Profile Information</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Informace</h2>
             <p className="text-sm text-gray-600 mb-4">
-              Update your account profile information and email address.
+              Upravte své informace
             </p>
             
             <form onSubmit={handleProfileUpdate}>
               <div className="space-y-4">
                 <Input
-                  label="Username"
+                  label="Uživatelské jméno"
                   type="text"
                   name="username"
                   value={formData.username}
@@ -106,7 +106,7 @@ function ProfilePage() {
                     isLoading={updating}
                     disabled={updating}
                   >
-                    Save Changes
+                    Uložit změny
                   </Button>
                 </div>
               </div>
@@ -117,7 +117,7 @@ function ProfilePage() {
         {/* User Role Info Card */}
         <Card className="mt-6">
           <div className="p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Account Information</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Další informace</h2>
             
             <div className="space-y-2">
               <div className="flex justify-between">
@@ -126,7 +126,7 @@ function ProfilePage() {
               </div>
               
               <div className="flex justify-between">
-                <span className="text-gray-600">Joined:</span>
+                <span className="text-gray-600">Připojil se:</span>
                 <span className="font-medium">
                   {user?.date_joined ? new Date(user.date_joined).toLocaleDateString() : 'Unknown'}
                 </span>

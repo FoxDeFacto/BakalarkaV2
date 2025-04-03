@@ -249,7 +249,7 @@ function ProjectDetailPage() {
             className="inline-flex items-center text-blue-600 hover:text-blue-800"
           >
             <ChevronLeftIcon className="h-5 w-5 mr-1" />
-            Back to Projects
+            Zpět na projekty
           </Link>
           
           <div className="flex space-x-3">
@@ -257,7 +257,7 @@ function ProjectDetailPage() {
               <Link href={`/dashboard/projects/${projectId}/edit`}>
                 <Button variant="outline" className="inline-flex items-center">
                   <PencilIcon className="h-4 w-4 mr-1" />
-                  Edit Project
+                  Upravit projekt
                 </Button>
               </Link>
             )}
@@ -269,7 +269,7 @@ function ProjectDetailPage() {
                 onClick={() => projectsApi.updateProject(projectId, { status: 'in_progress' }).then(fetchProject)}
               >
                 <ArrowPathIcon className="h-4 w-4 mr-1" />
-                Start Progress
+                Začít s postupem
               </Button>
             )}
             
@@ -281,7 +281,7 @@ function ProjectDetailPage() {
                 isLoading={isSubmitting}
                 disabled={isSubmitting}
               >
-                Submit Project
+                Odevzdat projekt
               </Button>
             )}
             
@@ -294,7 +294,7 @@ function ProjectDetailPage() {
                 disabled={isSubmitting}
               >
                 <TrashIcon className="h-4 w-4 mr-1" />
-                Delete
+                Smazat
               </Button>
             )}
           </div>
@@ -319,7 +319,7 @@ function ProjectDetailPage() {
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">{project.title}</h1>
                 <div className="mt-1 flex items-center">
-                  <span className="text-sm text-gray-500 mr-2">By {project.student_name}</span>
+                  <span className="text-sm text-gray-500 mr-2">Od {project.student_name}</span>
                   <Badge variant={getStatusBadgeColor(project.status)}>
                     {project.status_display}
                   </Badge>
@@ -334,11 +334,11 @@ function ProjectDetailPage() {
                 </Badge>
                 {project.public_visibility ? (
                   <Badge variant="green" size="lg" className="ml-2">
-                    Public
+                    Zveřejněné
                   </Badge>
                 ) : (
                   <Badge variant="gray" size="lg" className="ml-2">
-                    Private
+                    Nezveřejněné
                   </Badge>
                 )}
               </div>
@@ -360,20 +360,20 @@ function ProjectDetailPage() {
 
             {/* Description */}
             <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-2">Description</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-2">Popis</h2>
               <p className="text-gray-700 whitespace-pre-line">{project.description}</p>
             </div>
 
             {/* Field and keywords */}
             <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-2">Field & Keywords</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-2">Obor & Klíčová slova</h2>
               <div className="flex flex-col space-y-2">
                 <div>
-                  <span className="text-gray-500">Field: </span>
+                  <span className="text-gray-500">Obor: </span>
                   <span className="text-gray-900">{project.field}</span>
                 </div>
                 <div>
-                  <span className="text-gray-500">Keywords: </span>
+                  <span className="text-gray-500">Klíčová slova: </span>
                   <div className="flex flex-wrap gap-2 mt-1">
                     {project.keywords.map((keyword, i) => (
                       <Badge key={i} variant="gray" size="sm">
@@ -387,7 +387,7 @@ function ProjectDetailPage() {
 
             {/* Files */}
             <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-2">Project Files</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-2">Soubory</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {project.document ? (
                   <a
@@ -409,7 +409,7 @@ function ProjectDetailPage() {
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                       />
                     </svg>
-                    <span>Document</span>
+                    <span>Hlavní dokument</span>
                   </a>
                 ) : (
                   <div className="flex items-center p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-500">
@@ -426,7 +426,7 @@ function ProjectDetailPage() {
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                       />
                     </svg>
-                    <span>No document uploaded</span>
+                    <span>Bez dokumentu</span>
                   </div>
                 )}
 
@@ -450,7 +450,7 @@ function ProjectDetailPage() {
                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                    <span>Poster</span>
+                    <span>Plagát</span>
                   </a>
                 ) : (
                   <div className="flex items-center p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-500">
@@ -467,7 +467,7 @@ function ProjectDetailPage() {
                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                    <span>No poster uploaded</span>
+                    <span>Bez plagátu</span>
                   </div>
                 )}
 
@@ -508,7 +508,7 @@ function ProjectDetailPage() {
                         d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
                       />
                     </svg>
-                    <span>No video uploaded</span>
+                    <span>Bez videa</span>
                   </div>
                 )}
               </div>
@@ -525,16 +525,16 @@ function ProjectDetailPage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Teacher
+                        Učitel
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Role
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        Stav
                       </th>
                       <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        Akce
                       </th>
                     </tr>
                   </thead>
@@ -556,9 +556,9 @@ function ProjectDetailPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {teacher.accepted ? (
-                            <Badge variant="green">Accepted</Badge>
+                            <Badge variant="green">Příjmuté</Badge>
                           ) : (
-                            <Badge variant="yellow">Pending</Badge>
+                            <Badge variant="yellow">Čeká</Badge>
                           )}
                         </td>                 
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -570,14 +570,14 @@ function ProjectDetailPage() {
                                 onClick={() => handleAcceptAssignment(teacher.id)}
                                 className="mr-2"
                               >
-                                Accept
+                                Příjmout
                               </Button>
                               <Button
                                 variant="danger"
                                 size="sm"
                                 onClick={() => handleDeclineAssignment(teacher.id)}
                               >
-                                Decline
+                                Odmítnout
                               </Button>
                             </>
                           )}
@@ -589,7 +589,7 @@ function ProjectDetailPage() {
                               size="sm"
                               onClick={() => handleRemoveTeacher(teacher.id)}
                             >
-                              Remove
+                              Odstranit
                             </Button>
                           )}
                         </td>
@@ -599,7 +599,7 @@ function ProjectDetailPage() {
                 </table>
               </div>
             ) : (
-              <p className="text-gray-500 italic py-4 text-center">No teachers assigned to this project yet.</p>
+              <p className="text-gray-500 italic py-4 text-center">Tento projekt je zatím bez učitelů</p>
             )}
             
             {/* Show assign teacher button for project owner or admin */}
@@ -620,27 +620,27 @@ function ProjectDetailPage() {
         <div className="flex flex-wrap gap-4 mt-8">
           <Link href={`/dashboard/projects/${projectId}/milestones`}>
             <Button variant="outline">
-              View Milestones
+              Zobrazit milníky
             </Button>
           </Link>
           
           <Link href={`/dashboard/projects/${projectId}/consultations`}>
             <Button variant="outline">
-              View Consultations
+            Zobrazit konzultace
             </Button>
           </Link>
           
           {(project.status === 'submitted' || project.status === 'evaluated' || project.status === 'completed') && (
             <Link href={`/dashboard/projects/${projectId}/evaluations`}>
               <Button variant="outline">
-                View Evaluations
+              Zobrazit hodnocení
               </Button>
             </Link>
           )}
           
           <Link href={`/projects-public/${projectId}`} target="_blank">
             <Button variant="outline">
-              View Public Page
+            Zobrazit zveřejněné projekty
             </Button>
           </Link>
         </div>
@@ -659,7 +659,7 @@ function ProjectDetailPage() {
                 value={selectedTeacher?.toString() || ''}
                 onChange={(e) => setSelectedTeacher(Number(e.target.value))}
                 options={[
-                  { value: '', label: 'Select a teacher...' },
+                  { value: '', label: 'Vyberte učitele...' },
                   ...teachers
                     .filter(t => !project.teachers?.some(pt => pt.teacher === t.id))
                     .map(t => ({ value: t.id.toString(), label: t.username }))
@@ -674,9 +674,9 @@ function ProjectDetailPage() {
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value as TeacherRole)}
                 options={[
-                  { value: 'supervisor', label: 'Supervisor' },
-                  { value: 'consultant', label: 'Consultant' },
-                  { value: 'opponent', label: 'Opponent' },
+                  { value: 'supervisor', label: 'Dohled' },
+                  { value: 'consultant', label: 'Konzultant' },
+                  { value: 'opponent', label: 'Oponent' },
                 ]}
                 fullWidth
               />
@@ -687,7 +687,7 @@ function ProjectDetailPage() {
                 variant="outline"
                 onClick={() => setIsAssignTeacherModalOpen(false)}
               >
-                Cancel
+                Zrušit
               </Button>
               <Button
                 variant="primary"
@@ -695,7 +695,7 @@ function ProjectDetailPage() {
                 isLoading={assigningTeacher}
                 disabled={assigningTeacher || !selectedTeacher}
               >
-                Assign
+                Přiřadit
               </Button>
             </div>
           </div>

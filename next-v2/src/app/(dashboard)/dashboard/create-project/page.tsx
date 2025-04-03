@@ -38,7 +38,7 @@ function CreateProjectPage() {
     return (
       <DashboardLayout>
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900 mb-6">Create New Project</h1>
+          <h1 className="text-2xl font-semibold text-gray-900 mb-6">Vytvořit nový projekt</h1>
           
           {error && (
             <div className="mb-4">

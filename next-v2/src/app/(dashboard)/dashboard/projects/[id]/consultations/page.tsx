@@ -76,7 +76,7 @@ function ConsultationsPage() {
   };
 
   const handleDeleteConsultation = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this consultation?')) {
+    if (!confirm('Jste si jistý, že chce smazat tuto kontultaci?')) {
       return;
     }
     
@@ -84,7 +84,7 @@ function ConsultationsPage() {
     
     try {
       await consultationsApi.deleteConsultation(id);
-      setSuccess('Consultation deleted successfully');
+      setSuccess('Konzultace úspěšně smazána');
       
       // Refresh consultation list
       fetchData();
@@ -100,10 +100,10 @@ function ConsultationsPage() {
     try {
       if (isEditMode && currentConsultation) {
         await consultationsApi.updateConsultation(currentConsultation.id, data);
-        setSuccess('Consultation updated successfully');
+        setSuccess('Konzultace úspěšně upravana');
       } else {
         await consultationsApi.createConsultation(data);
-        setSuccess('Consultation scheduled successfully');
+        setSuccess('Konzultace úspěšně naplánována');
       }
       
       // Close modal and refresh consultation list
@@ -133,7 +133,7 @@ function ConsultationsPage() {
           <Alert variant="danger" title="Error" message={error || 'Project not found'} />
           <div className="mt-4">
             <Link href="/dashboard/projects">
-              <Button variant="primary">Back to Projects</Button>
+              <Button variant="primary">Zpět</Button>
             </Link>
           </div>
         </div>
@@ -152,9 +152,9 @@ function ConsultationsPage() {
               className="inline-flex items-center text-blue-600 hover:text-blue-800"
             >
               <ChevronLeftIcon className="h-5 w-5 mr-1" />
-              Back to Project
+              Zpět
             </Link>
-            <h1 className="text-2xl font-semibold text-gray-900 mt-2">Consultations for {project.title}</h1>
+            <h1 className="text-2xl font-semibold text-gray-900 mt-2">Kontultace pro {project.title}</h1>
           </div>
           
           {(isTeacher || isAdmin) && (
@@ -164,7 +164,7 @@ function ConsultationsPage() {
               onClick={handleCreateConsultation}
             >
               <PlusIcon className="h-4 w-4 mr-1" />
-              Schedule Consultation
+              Naplánovat konzultaci
             </Button>
           )}
         </div>
@@ -197,7 +197,7 @@ function ConsultationsPage() {
                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <h3 className="mt-2 text-lg font-medium text-gray-900">No consultations found</h3>
+            <h3 className="mt-2 text-lg font-medium text-gray-900">Bez kontultací</h3>
             <p className="mt-1 text-sm text-gray-500">
               {isTeacher || isAdmin 
                 ? 'Get started by scheduling a consultation for this project.' 
@@ -207,7 +207,7 @@ function ConsultationsPage() {
               <div className="mt-6">
                 <Button variant="primary" onClick={handleCreateConsultation}>
                   <PlusIcon className="h-4 w-4 mr-1 inline" />
-                  Schedule First Consultation
+                  Naplánujte první kontultaci
                 </Button>
               </div>
             )}
@@ -219,16 +219,16 @@ function ConsultationsPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date & Time
+                      Datum a čas
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Teacher
+                      Učitel
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Notes
+                      Poznámky
                     </th>
                     <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      Akce
                     </th>
                   </tr>
                 </thead>
@@ -247,7 +247,7 @@ function ConsultationsPage() {
                           </div>
                           {isPast && (
                             <span className="inline-block mt-1 px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-800">
-                              Past
+                              Minulé
                             </span>
                           )}
                         </td>
@@ -256,7 +256,7 @@ function ConsultationsPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900 max-w-md break-words">
-                            {consultation.notes || <span className="text-gray-500 italic">No notes</span>}
+                            {consultation.notes || <span className="text-gray-500 italic">Bez poznámek</span>}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -294,7 +294,7 @@ function ConsultationsPage() {
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title={isEditMode ? 'Edit Consultation' : 'Schedule New Consultation'}
+          title={isEditMode ? 'Upravit konzultaci' : 'Naplánovat novou konzultaci'}
           size="md"
         >
           <ConsultationForm

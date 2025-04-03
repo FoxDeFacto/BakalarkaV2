@@ -126,7 +126,7 @@ export function ProjectCard({ project, isPublic }: ProjectCardProps) {
           ))}
           {project.keywords.length > 3 && (
             <Badge variant="gray" size="sm">
-              +{project.keywords.length - 3} more
+              +{project.keywords.length - 3} více
             </Badge>
           )}
         </div>
@@ -136,7 +136,7 @@ export function ProjectCard({ project, isPublic }: ProjectCardProps) {
             href={isPublic ? `/projects-public/${project.id}` : `/projects/${project.id}`}
             className="text-blue-600 hover:text-blue-800 font-medium"
           >
-            View details →
+            Zobrazit detail →
           </Link>
         </div>
       </div>

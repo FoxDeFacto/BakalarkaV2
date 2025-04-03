@@ -184,26 +184,26 @@ function ConsultationsDashboardPage() {
     <DashboardLayout>
       <div>
         <div className="mb-6 flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Consultations</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">Konzultace</h1>
           
           <div className="flex space-x-2">
             <Button
               variant={selectedDateFilter === 'upcoming' ? 'primary' : 'outline'}
               onClick={() => setSelectedDateFilter('upcoming')}
             >
-              Upcoming
+              Nadcházející
             </Button>
             <Button
               variant={selectedDateFilter === 'past' ? 'primary' : 'outline'}
               onClick={() => setSelectedDateFilter('past')}
             >
-              Past
+              Minulé
             </Button>
             <Button
               variant={selectedDateFilter === 'all' ? 'primary' : 'outline'}
               onClick={() => setSelectedDateFilter('all')}
             >
-              All
+              Všechny
             </Button>
           </div>
         </div>
@@ -235,7 +235,7 @@ function ConsultationsDashboardPage() {
                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <h3 className="mt-2 text-lg font-medium text-gray-900">No consultations found</h3>
+            <h3 className="mt-2 text-lg font-medium text-gray-900">Bez konzultací</h3>
             <p className="mt-1 text-sm text-gray-500">
               {selectedDateFilter === 'upcoming' 
                 ? "You don't have any upcoming consultations scheduled." 
@@ -246,7 +246,7 @@ function ConsultationsDashboardPage() {
             <div className="mt-6">
               <Link href="/dashboard/assigned">
                 <Button variant="primary">
-                  View Assigned Projects
+                  Všechny přiřazené projekty
                 </Button>
               </Link>
             </div>
@@ -297,7 +297,7 @@ function ConsultationsDashboardPage() {
                             
                             <div className="mt-4 md:mt-0 md:ml-6 md:flex-shrink-0">
                               <div className="bg-gray-100 p-3 rounded-lg max-w-md">
-                                <h4 className="text-sm font-medium text-gray-700 mb-1">Notes:</h4>
+                                <h4 className="text-sm font-medium text-gray-700 mb-1">Poznámky:</h4>
                                 <p className="text-sm text-gray-600">
                                   {consultation.notes || <span className="italic">No notes provided</span>}
                                 </p>
@@ -308,7 +308,7 @@ function ConsultationsDashboardPage() {
                                   href={`/dashboard/projects/${project.id}/consultations`}
                                   className="text-sm text-blue-600 hover:text-blue-800"
                                 >
-                                  View all consultations
+                                  Zobrazit všechny konzultace
                                 </Link>
                               </div>
                             </div>
@@ -326,7 +326,7 @@ function ConsultationsDashboardPage() {
               <div className="bg-white shadow rounded-lg p-6 mt-8">
                 <h2 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
                   <PlusIcon className="h-5 w-5 mr-2 text-gray-500" />
-                  Schedule New Consultation
+                  Nová konzultace
                 </h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -343,7 +343,7 @@ function ConsultationsDashboardPage() {
                             className="w-full"
                             onClick={() => handleCreateConsultation(project.id)}
                           >
-                            Schedule Consultation
+                            Naplánovat novou konzultaci
                           </Button>
                         </div>
                       </div>
@@ -358,7 +358,7 @@ function ConsultationsDashboardPage() {
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Schedule New Consultation"
+          title="Naplánovat novou konzultaci"
           size="md"
         >
           {selectedProjectId && (

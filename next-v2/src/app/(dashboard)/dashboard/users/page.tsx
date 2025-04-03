@@ -234,10 +234,10 @@ function UsersManagementPage() {
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
                 options={[
-                  { value: '', label: 'All Roles' },
-                  { value: 'student', label: 'Students' },
-                  { value: 'teacher', label: 'Teachers' },
-                  { value: 'admin', label: 'Administrators' },
+                  { value: '', label: 'Všechny role' },
+                  { value: 'student', label: 'Studenti' },
+                  { value: 'teacher', label: 'Učitelé' },
+                  { value: 'admin', label: 'Admini' },
                 ]}
                 fullWidth
               />
@@ -265,11 +265,11 @@ function UsersManagementPage() {
                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
               />
             </svg>
-            <h3 className="mt-2 text-lg font-medium text-gray-900">No users found</h3>
+            <h3 className="mt-2 text-lg font-medium text-gray-900">Žádní uživatelé nenalezeni</h3>
             <p className="mt-1 text-sm text-gray-500">
               {searchTerm || roleFilter 
-                ? 'Try adjusting your search or filters' 
-                : 'No users have been created yet'}
+                ? 'Zkuste upravit vyhledávání' 
+                : 'Žádní uživatelé nevytvoření'}
             </p>
           </div>
         ) : (
@@ -279,7 +279,7 @@ function UsersManagementPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Username
+                      Uživatelské jméno
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Email
@@ -288,10 +288,10 @@ function UsersManagementPage() {
                       Role
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Joined
+                      Připojil se
                     </th>
                     <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      Akce
                     </th>
                   </tr>
                 </thead>
@@ -323,7 +323,7 @@ function UsersManagementPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <Button variant="outline" size="sm">
-                          View Details
+                          Zobrazit detail
                         </Button>
                       </td>
                     </tr>
@@ -338,13 +338,13 @@ function UsersManagementPage() {
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Create New User"
+          title="Vytvořit nového uživatele"
           size="md"
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Input
-                label="Username"
+                label="Uživatelské jméno"
                 id="username"
                 name="username"
                 value={formData.username}
@@ -371,7 +371,7 @@ function UsersManagementPage() {
             
             <div>
               <Input
-                label="Password"
+                label="Heslo"
                 id="password"
                 name="password"
                 type="password"
@@ -385,7 +385,7 @@ function UsersManagementPage() {
             
             <div>
               <Input
-                label="Confirm Password"
+                label="Potvrzení hesla"
                 id="password_confirm"
                 name="password_confirm"
                 type="password"
@@ -406,8 +406,8 @@ function UsersManagementPage() {
                 onChange={handleInputChange}
                 options={[
                   { value: 'student', label: 'Student' },
-                  { value: 'teacher', label: 'Teacher' },
-                  { value: 'admin', label: 'Administrator' },
+                  { value: 'teacher', label: 'Učitel' },
+                  { value: 'admin', label: 'Admin' },
                 ]}
                 fullWidth
                 required
@@ -420,7 +420,7 @@ function UsersManagementPage() {
                 variant="outline"
                 onClick={() => setIsModalOpen(false)}
               >
-                Cancel
+                Zrušit
               </Button>
               <Button
                 type="submit"
@@ -428,7 +428,7 @@ function UsersManagementPage() {
                 isLoading={isSubmitting}
                 disabled={isSubmitting}
               >
-                Create User
+                Vytvořit uživatele
               </Button>
             </div>
           </form>

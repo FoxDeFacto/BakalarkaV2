@@ -65,7 +65,7 @@ export function EvaluationForm({ projectId, initialData = {}, onSubmit, isLoadin
       <div className="grid grid-cols-1 gap-6">
         <div>
           <Textarea
-            label="Evaluation"
+            label="Hodnocení"
             name="evaluation"
             value={formData.evaluation || ''}
             onChange={handleInputChange}
@@ -79,7 +79,7 @@ export function EvaluationForm({ projectId, initialData = {}, onSubmit, isLoadin
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Score ({formData.score}/100)
+            Body ({formData.score}/100)
           </label>
           <input
             type="range"

@@ -26,7 +26,7 @@ export default function Header() {
           <div className="relative flex h-16 items-center justify-between">
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
-                <span className="text-white font-bold text-xl">ProjectHub</span>
+                <span className="text-white font-bold text-xl">Studenstké projekty</span>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@ export default function Header() {
           <div className="relative flex h-16 items-center justify-between">
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
-                <span className="text-white font-bold text-xl">ProjectHub</span>
+                <span className="text-white font-bold text-xl">Studenstké projekty</span>
               </div>
             </div>
           </div>
@@ -54,20 +54,20 @@ export default function Header() {
 
   // Navigation items based on user role
   const navigation = [
-    { name: 'Home', href: '/', current: pathname === '/' },
-    { name: 'Projects', href: '/projects-public', current: pathname === '/projects-public' },
+    { name: 'Domů', href: '/', current: pathname === '/' },
+    { name: 'Projekty', href: '/projects-public', current: pathname === '/projects-public' },
   ];
 
   if (isAuthenticated) {
-    navigation.push({ name: 'Dashboard', href: '/dashboard', current: pathname === '/dashboard' });
+    navigation.push({ name: 'Přehled', href: '/dashboard', current: pathname === '/dashboard' });
     
     if (isStudent) {
-      navigation.push({ name: 'My Projects', href: '/dashboard/my-projects', current: pathname === '/dashboard/my-projects' });
+      navigation.push({ name: 'Moje projekty', href: '/dashboard/my-projects', current: pathname === '/dashboard/my-projects' });
     }
     
     if (isTeacher || isAdmin) {
-      navigation.push({ name: 'Assigned Projects', href: '/dashboard/assigned', current: pathname === '/dashboard/assigned' });
-      navigation.push({ name: 'Evaluations', href: '/dashboard/evaluations', current: pathname === '/dashboard/evaluations' });
+      navigation.push({ name: 'Přiřazené projekty', href: '/dashboard/assigned', current: pathname === '/dashboard/assigned' });
+      navigation.push({ name: 'Hodnocení', href: '/dashboard/evaluations', current: pathname === '/dashboard/evaluations' });
     }
   }
 
@@ -81,7 +81,7 @@ export default function Header() {
                 {/* Mobile menu button */}
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-blue-200 hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="absolute -inset-0.5" />
-                  <span className="sr-only">Open main menu</span>
+                  <span className="sr-only">Otevřít hlavní menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                   ) : (
@@ -91,7 +91,7 @@ export default function Header() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <span className="text-white font-bold text-xl">ProjectHub</span>
+                  <span className="text-white font-bold text-xl">Studenstké projekty</span>
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
@@ -119,7 +119,7 @@ export default function Header() {
                     <div>
                       <Menu.Button className="relative flex rounded-full bg-blue-700 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-800">
                         <span className="absolute -inset-1.5" />
-                        <span className="sr-only">Open user menu</span>
+                        <span className="sr-only">Otevřít uživatelské menu</span>
                         <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
                           {user?.username.charAt(0).toUpperCase()}
                         </div>
@@ -148,7 +148,7 @@ export default function Header() {
                                 active ? 'bg-gray-100' : ''
                               } block px-4 py-2 text-sm text-gray-700`}
                             >
-                              Your Profile
+                              Váš učet
                             </Link>
                           )}
                         </Menu.Item>
@@ -160,7 +160,7 @@ export default function Header() {
                                 active ? 'bg-gray-100' : ''
                               } block w-full text-left px-4 py-2 text-sm text-gray-700`}
                             >
-                              Sign out
+                              Odhlášení
                             </button>
                           )}
                         </Menu.Item>
@@ -173,13 +173,13 @@ export default function Header() {
                       href="/login"
                       className="bg-blue-700 text-white hover:bg-blue-600 rounded-md px-3 py-2 text-sm font-medium"
                     >
-                      Login
+                      Přihlášení
                     </Link>
                     <Link
                       href="/register"
                       className="bg-white text-blue-800 hover:bg-blue-100 rounded-md px-3 py-2 text-sm font-medium"
                     >
-                      Register
+                      Registrace
                     </Link>
                   </div>
                 )}

@@ -19,7 +19,7 @@ export default function LoginPage() {
     e.preventDefault();
     
     if (!username || !password) {
-      setError('Please enter both username and password');
+      setError('Zadejte jméno i heslo');
       return;
     }
     
@@ -30,7 +30,7 @@ export default function LoginPage() {
       await login(username, password);
       // Redirect is handled in the auth context
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
+      setError(err instanceof Error ? err.message : 'Chyba přihlášení. Zkuste to prosím znovu');
     } finally {
       setIsLoading(false);
     }
@@ -40,7 +40,7 @@ export default function LoginPage() {
     <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Sign in to your account
+          Přihlášení
         </h2>
       </div>
 
@@ -56,7 +56,7 @@ export default function LoginPage() {
             <div>
               <Input
                 id="username"
-                label="Username"
+                label="Uživatelské heslo"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -69,7 +69,7 @@ export default function LoginPage() {
             <div>
               <Input
                 id="password"
-                label="Password"
+                label="Jméno"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -86,7 +86,7 @@ export default function LoginPage() {
                 fullWidth
                 isLoading={isLoading}
               >
-                Sign in
+                Přihlásit
               </Button>
             </div>
           </form>
@@ -98,18 +98,18 @@ export default function LoginPage() {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="bg-white px-2 text-gray-500">
-                  Or
+                  nebo
                 </span>
               </div>
             </div>
 
             <div className="mt-6 text-center text-sm text-gray-500">
-              Not a member?{' '}
+              Nejste člen?{' '}
               <Link
                 href="/register"
                 className="font-semibold leading-6 text-blue-600 hover:text-blue-500"
               >
-                Register now
+                Zaregistrujte se
               </Link>
             </div>
           </div>

@@ -50,28 +50,28 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
     const newErrors: Record<string, string> = {};
     
     if (!formData.title?.trim()) {
-      newErrors.title = 'Title is required';
+      newErrors.title = 'Název je povinný';
     }
     
     if (!formData.description?.trim()) {
-      newErrors.description = 'Description is required';
+      newErrors.description = 'Popis je povinný';
     }
     
     if (!formData.field?.trim()) {
-      newErrors.field = 'Field is required';
+      newErrors.field = 'Obor je povinný';
     }
     
     if (!formData.year) {
-      newErrors.year = 'Year is required';
+      newErrors.year = 'Rok je povinný';
     } else if (
       typeof formData.year === 'number' && 
       (formData.year < 2000 || formData.year > new Date().getFullYear() + 1)
     ) {
-      newErrors.year = `Year must be between 2000 and ${new Date().getFullYear() + 1}`;
+      newErrors.year = `Rok musí být mezi rokem 2000 a ${new Date().getFullYear() + 1}`;
     }
     
     if (!formData.keywords || formData.keywords.length === 0) {
-      newErrors.keywords = 'At least one keyword is required';
+      newErrors.keywords = 'AlespoŇ jedno klíčové slovo je vyžadováno';
     }
     
     setErrors(newErrors);
@@ -127,7 +127,7 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="col-span-1 md:col-span-2">
           <Input
-            label="Project Title"
+            label="Název"
             name="title"
             value={formData.title || ''}
             onChange={handleInputChange}
@@ -139,7 +139,7 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
 
         <div className="col-span-1 md:col-span-2">
           <Textarea
-            label="Description"
+            label="Popis"
             name="description"
             value={formData.description || ''}
             onChange={handleInputChange}
@@ -152,7 +152,7 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
 
         <div>
           <Input
-            label="Year"
+            label="Rok"
             name="year"
             type="number"
             min={2000}
@@ -167,7 +167,7 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
 
         <div>
           <Select
-            label="Type of Work"
+            label="Druh práce"
             name="type_of_work"
             value={formData.type_of_work || 'SOČ'}
             onChange={handleInputChange}
@@ -183,7 +183,7 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
 
         <div className="col-span-1 md:col-span-2">
           <Input
-            label="Field"
+            label="Obor"
             name="field"
             value={formData.field || ''}
             onChange={handleInputChange}
@@ -199,7 +199,7 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
           </label>
           <div className="flex">
             <Input
-              placeholder="Add keyword..."
+              placeholder="Klíčové slovo..."
               value={keywordInput}
               onChange={(e) => setKeywordInput(e.target.value)}
               className="rounded-r-none"
@@ -247,63 +247,63 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="public_visibility" className="ml-2 block text-sm text-gray-900">
-              Make this project publicly visible
+              Udělat tento projekt veřejný
             </label>
           </div>
         </div>
 
         <div className="col-span-1 md:col-span-2">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Project Files</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Soubory</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <FileUpload
-                label="Thumbnail Image"
+                label="Úvodní obrázek"
                 type="thumbnail"
                 onUploadComplete={handleFileUpload('thumbnail')}
                 accept="image/jpeg,image/png,image/gif"
                 currentFile={formData.thumbnail}
               />
               <p className="mt-1 text-sm text-gray-500">
-                Square image recommended for best display (max 10MB)
+                Je doporučen čtvercový obrázek (max 10MB)
               </p>
             </div>
             
             <div>
               <FileUpload
-                label="Project Document"
+                label="Hlavní dokument"
                 type="document"
                 onUploadComplete={handleFileUpload('document')}
                 accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 currentFile={formData.document}
               />
               <p className="mt-1 text-sm text-gray-500">
-                Upload your full project document (PDF, DOC, DOCX)
+               Nahrát dokument ve formátu (PDF, DOC, DOCX)
               </p>
             </div>
             
             <div>
               <FileUpload
-                label="Project Poster"
+                label="Plagát"
                 type="poster"
                 onUploadComplete={handleFileUpload('poster')}
                 accept="image/jpeg,image/png,application/pdf"
                 currentFile={formData.poster}
               />
               <p className="mt-1 text-sm text-gray-500">
-                Upload a poster or presentation image
+                Nahrát plagát
               </p>
             </div>
             
             <div>
               <FileUpload
-                label="Project Video"
+                label="Video"
                 type="video"
                 onUploadComplete={handleFileUpload('video')}
                 accept="video/mp4,video/webm,video/ogg"
                 currentFile={formData.video}
               />
               <p className="mt-1 text-sm text-gray-500">
-                Upload a video presentation of your project
+               Nahrát video
               </p>
             </div>
           </div>
@@ -317,7 +317,7 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
           isLoading={isLoading}
           disabled={isLoading}
         >
-          {initialData.id ? 'Update Project' : 'Create Project'}
+          {initialData.id ? 'Upravit projekt' : 'Vytvořit projekt'}
         </Button>
       </div>
     </form>

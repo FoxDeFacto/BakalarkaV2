@@ -13,20 +13,20 @@ export default function HomePage() {
         <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:py-32">
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Student Project Repository
+              Studentské projekty
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              A platform for students, teachers, and the public to access and manage research projects and seminar papers.
+              Platforma pro studenty, učitelé a širkou veřejnost s přístupem a správou k studenstkám projektům, voškám a seminárním pracím.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link href="/projects-public">
                 <Button variant="primary" size="lg">
-                  Browse Projects
+                  Procházet projekty
                 </Button>
               </Link>
               <Link href="/register">
                 <Button variant="outline" size="lg">
-                  Register
+                  Registrace
                 </Button>
               </Link>
             </div>
@@ -38,12 +38,12 @@ export default function HomePage() {
       <div className="py-16 sm:py-24 bg-blue-200">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:text-center">
-            <h2 className="text-base font-semibold leading-7 text-blue-600">Explore our platform</h2>
+            <h2 className="text-base font-semibold leading-7 text-blue-600">Prozkoumejte naší platformu</h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Everything you need to manage student projects
+             Všechno pro správu projektů na jednom místě
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Our platform provides tools for project management, collaboration, and showcasing student work.
+            Naše platforma poskytuje nástoje na kompletní správu projektů pro studenty i učitele s prezentací výsledných prací.
             </p>
           </div>
           <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
@@ -53,10 +53,10 @@ export default function HomePage() {
                   <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
                     <FileText color='white' size={32}></FileText>
                   </div>
-                  Project Documentation
+                  Projektová dokumentace
                 </dt>
                 <dd className="mt-2 text-base leading-7 text-gray-600">
-                  Upload and showcase complete project documentation, including manuscripts, posters, and presentations.
+                Nahrajte a prezentujte kompletní projektovou dokumentaci, včetně rukopisů, plakátů a prezentací.
                 </dd>
               </div>
               <div className="relative pl-16">
@@ -64,10 +64,10 @@ export default function HomePage() {
                   <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
                     <Handshake color='white' size={32}></Handshake>
                   </div>
-                  Teacher-Student Collaboration
+                  Spolupráce mezi učiteli a studenty
                 </dt>
                 <dd className="mt-2 text-base leading-7 text-gray-600">
-                  Teachers can provide structured guidance with milestones, consultations, and evaluations.
+                Učitelé mohou poskytovat strukturované vedení s milníky, konzultacemi a hodnoceními.
                 </dd>
               </div>
               <div className="relative pl-16">
@@ -75,10 +75,10 @@ export default function HomePage() {
                   <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
                     <ListChecks color='white' size={32}></ListChecks>
                   </div>
-                  Project Progress Tracking
+                  Sledování postupu
                 </dt>
                 <dd className="mt-2 text-base leading-7 text-gray-600">
-                  Track project progress through defined milestones and development stages for better time management.
+                Sledujte pokrok projektu prostřednictvím definovaných milníků a vývojových fází pro lepší správu času.
                 </dd>
               </div>
               <div className="relative pl-16">
@@ -86,10 +86,10 @@ export default function HomePage() {
                   <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
                     <Speech color='white' size={32}></Speech>
                   </div>
-                  Communication Tools
+                  Nástroje pro komunikaci
                 </dt>
                 <dd className="mt-2 text-base leading-7 text-gray-600">
-                  Built-in commenting system for feedback and discussion between students and teachers on projects.
+                Zabudovaný komentářový systém pro zpětnou vazbu a diskuzi mezi studenty a učiteli o projektech.
                 </dd>
               </div>
             </dl>
@@ -102,19 +102,19 @@ export default function HomePage() {
         <div className="px-6 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-white text-3xl font-bold tracking-tight sm:text-4xl ">
-              Start managing your projects today
+            Začněte se svými projekty již dnes
             </p>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-blue-100">
-              Join our platform to showcase your work, get guidance from teachers, and collaborate with peers.
+            Připojte se k naší platformě, kde můžete prezentovat svou práci, získat vedení od učitelů a spolupracovat s vrstevníky.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link href="/register">
                 <Button variant="outline" size="lg" className="bg-white text-black hover:bg-blue-50">
-                  Get started
+                  Začínáme
                 </Button>
               </Link>
               <Link href="/projects-public" className="p-3 rounded bg-white text-black hover:bg-blue-50">
-                Browse projects <span aria-hidden="true">→</span>
+                Procházejte projekty <span aria-hidden="true">→</span>
               </Link>
             </div>
           </div>

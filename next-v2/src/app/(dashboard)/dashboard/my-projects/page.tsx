@@ -100,13 +100,13 @@ function MyProjectsPage() {
                 d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 className="mt-2 text-lg font-medium text-gray-900">No projects found</h3>
+            <h3 className="mt-2 text-lg font-medium text-gray-900">Žádný projekt nenalezen</h3>
             <p className="mt-1 text-sm text-gray-500">
-              You have not created any projects yet.
+              Zatím jste nevytvořili žádný projekt
             </p>
             <div className="mt-4">
               <Link href="/dashboard/create-project">
-                <Button variant="primary">Create Your First Project</Button>
+                <Button variant="primary">Vytvořit první projekt</Button>
               </Link>
             </div>
           </div>
@@ -115,28 +115,28 @@ function MyProjectsPage() {
             {statusDisplayOrder.map(({ key, display }) => (
               projectsByStatus[key] && projectsByStatus[key].length > 0 && (
                 <div key={key}>
-                  <h2 className="text-lg font-medium text-gray-900 mb-4">{display} Projects</h2>
+                  <h2 className="text-lg font-medium text-gray-900 mb-4">{display} Projekty</h2>
                   <div className="overflow-x-auto bg-white shadow rounded-lg">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Title
+                            Název
                           </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Year
+                            Rok
                           </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Field
+                            Obor
                           </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Type
+                            Druh
                           </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Last Updated
+                            Poslední úprava
                           </th>
                           <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
+                            Akce
                           </th>
                         </tr>
                       </thead>
@@ -167,13 +167,13 @@ function MyProjectsPage() {
                                 href={`/dashboard/projects/${project.id}`}
                                 className="text-blue-600 hover:text-blue-900 mr-4"
                               >
-                                View
+                                Zobrazit
                               </Link>
                               <Link 
                                 href={`/dashboard/projects/${project.id}/edit`}
                                 className="text-indigo-600 hover:text-indigo-900"
                               >
-                                Edit
+                                Upravit
                               </Link>
                             </td>
                           </tr>

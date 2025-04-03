@@ -81,14 +81,14 @@ function ProjectsPage() {
       <div>
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">Projecty</h1>
             <p className="mt-1 text-sm text-gray-500">
-              Browse and manage all projects
+              Procházejte projekty
             </p>
           </div>
           {isStudent && (
             <Link href="/dashboard/create-project">
-              <Button variant="primary">Create Project</Button>
+              <Button variant="primary">Vytvořit projekty</Button>
             </Link>
           )}
         </div>
@@ -107,7 +107,7 @@ function ProjectsPage() {
           <div className="flex-1">
             <div className="mb-4">
               <p className="text-sm text-gray-500">
-                {totalProjects} project{totalProjects !== 1 ? 's' : ''} found
+                {totalProjects} projektů {totalProjects !== 1 ? 's' : ''} nalezeno
               </p>
             </div>
 
@@ -130,14 +130,14 @@ function ProjectsPage() {
                     d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <h3 className="mt-2 text-lg font-medium text-gray-900">No projects found</h3>
+                <h3 className="mt-2 text-lg font-medium text-gray-900">Žádný projekty nenalezeny</h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  Try adjusting your filters to find what you are looking for.
+                 Zkuste upravit vyhledávání
                 </p>
                 {isStudent && (
                   <div className="mt-4">
                     <Link href="/dashboard/create-project">
-                      <Button variant="primary">Create a New Project</Button>
+                      <Button variant="primary">Vytvořit nový projekt</Button>
                     </Link>
                   </div>
                 )}
@@ -149,25 +149,25 @@ function ProjectsPage() {
                     <thead className="bg-gray-50">
                       <tr>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Title
+                          Název
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Student
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Year
+                          Rok
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Field
+                          Obor
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Status
+                          Stav
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Type
+                          Druh
                         </th>
                         <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Actions
+                          Akce
                         </th>
                       </tr>
                     </thead>
@@ -206,13 +206,13 @@ function ProjectsPage() {
                               href={`/dashboard/projects/${project.id}`}
                               className="text-blue-600 hover:text-blue-900 mr-4"
                             >
-                              View
+                              Zobrazit
                             </Link>
                             <Link 
                               href={`/dashboard/projects/${project.id}/edit`}
                               className="text-indigo-600 hover:text-indigo-900"
                             >
-                              Edit
+                              Upravit
                             </Link>
                           </td>
                         </tr>
@@ -229,7 +229,7 @@ function ProjectsPage() {
                       isLoading={loading}
                       disabled={loading}
                     >
-                      Load More
+                      Načít více
                     </Button>
                   </div>
                 )}

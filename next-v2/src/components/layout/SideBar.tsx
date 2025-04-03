@@ -20,9 +20,9 @@ export default function Sidebar() {
 
   // Base navigation items for all authenticated users
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: pathname === '/dashboard' },
+    { name: 'Přehled', href: '/dashboard', icon: HomeIcon, current: pathname === '/dashboard' },
     { 
-      name: 'All Projects', 
+      name: 'Všechny projekty', 
       href: '/dashboard/projects', 
       icon: DocumentTextIcon, 
       current: pathname === '/dashboard/projects' 
@@ -33,13 +33,13 @@ export default function Sidebar() {
   if (isStudent) {
     navigation.push(
       { 
-        name: 'My Projects', 
+        name: 'Moje projekty', 
         href: '/dashboard/my-projects', 
         icon: DocumentTextIcon, 
         current: pathname === '/dashboard/my-projects' 
       },
       { 
-        name: 'Create Project', 
+        name: 'Vytvořit projekt', 
         href: '/dashboard/create-project', 
         icon: PlusIcon, 
         current: pathname === '/dashboard/create-project' 
@@ -50,19 +50,19 @@ export default function Sidebar() {
   if (isTeacher || isAdmin) {
     navigation.push(
       { 
-        name: 'Assigned Projects', 
+        name: 'Přiřezené projekty', 
         href: '/dashboard/assigned', 
         icon: ClipboardDocumentCheckIcon, 
         current: pathname === '/dashboard/assigned' 
       },
       { 
-        name: 'Consultations', 
+        name: 'Konzultace', 
         href: '/dashboard/consultations', 
         icon: CalendarIcon, 
         current: pathname === '/dashboard/consultations' 
       },
       { 
-        name: 'Evaluations', 
+        name: 'Hodnocení', 
         href: '/dashboard/evaluations', 
         icon: ChartBarIcon, 
         current: pathname === '/dashboard/evaluations' 
@@ -72,7 +72,7 @@ export default function Sidebar() {
 
   if (isAdmin) {
     navigation.push({ 
-      name: 'Users', 
+      name: 'Uživatelé', 
       href: '/dashboard/users', 
       icon: UserGroupIcon, 
       current: pathname === '/dashboard/users' 
@@ -82,7 +82,7 @@ export default function Sidebar() {
   return (
     <div className="flex flex-col h-full bg-white border-r border-gray-200">
       <div className="p-4">
-        <h2 className="text-lg font-semibold text-gray-900">Dashboard</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Přehled</h2>
       </div>
       <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-1 px-2">
