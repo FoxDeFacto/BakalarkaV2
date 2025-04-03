@@ -71,7 +71,7 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
     }
     
     if (!formData.keywords || formData.keywords.length === 0) {
-      newErrors.keywords = 'AlespoŇ jedno klíčové slovo je vyžadováno';
+      newErrors.keywords = 'Alespoň jedno klíčové slovo je vyžadováno';
     }
     
     setErrors(newErrors);
@@ -211,7 +211,7 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
               className="rounded-l-none"
               disabled={!keywordInput.trim()}
             >
-              Add
+              Přidat
             </Button>
           </div>
           

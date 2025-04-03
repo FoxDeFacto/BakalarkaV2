@@ -83,19 +83,19 @@ export function FileUpload({
       <div className="mt-1 flex flex-col items-center justify-center">
         {preview && (type === 'thumbnail' || type === 'poster') && (
           <div className="mb-3">
-            <img src={preview} alt="Preview" className="h-32 object-contain" />
+            <img src={preview} alt="Náhled" className="h-32 object-contain" />
           </div>
         )}
         
         {currentFile && type === 'document' && (
           <div className="mb-3 text-sm text-gray-600">
-            Current document: {currentFile.split('/').pop()}
+            Aktulní dokument: {currentFile.split('/').pop()}
           </div>
         )}
         
         {currentFile && type === 'video' && (
           <div className="mb-3 text-sm text-gray-600">
-            Current video: {currentFile.split('/').pop()}
+            Aktuální video: {currentFile.split('/').pop()}
           </div>
         )}
         
@@ -108,7 +108,7 @@ export function FileUpload({
               <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
             </svg>
             <span className="mt-2 text-base leading-normal">
-              {isLoading ? 'Uploading...' : 'Select a file'}
+              {isLoading ? 'Nahrávání...' : 'Vyberte soubor'}
             </span>
             <input
               id={`file-upload-${type}`}

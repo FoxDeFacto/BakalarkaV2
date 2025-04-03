@@ -9,8 +9,8 @@ import { AuthProvider } from '@/lib/auth';
 const inter = Inter({ subsets: ['latin', 'latin-ext'] });
 
 export const metadata: Metadata = {
-  title: 'ProjectHub - School Projects Portal',
-  description: 'Portal for managing and presenting student research projects and seminar papers',
+  title: 'Studentské projekty - Skolní portál',
+  description: 'Portál pro prezentaci a správů studentské činnosti',
 };
 
 export default function RootLayout({

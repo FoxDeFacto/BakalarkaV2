@@ -260,6 +260,21 @@ export const projectsApi = {
   },
 };
 
+export const visibleProjectsApi = {
+  async getProjects(params: Record<string, string> = {}) {
+    // Build query string
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) queryParams.set(key, value);
+    });
+    
+    const url = `${API_URL}/visible-projects/${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const response = await fetchWithAuth(url);
+    
+    return handleResponse<{ results: Project[]; count: number }>(response);
+  }
+};
+
 // File upload API
 export const fileApi = {
   async uploadFile(file: File, type: 'thumbnail' | 'document' | 'poster' | 'video') {

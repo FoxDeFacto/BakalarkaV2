@@ -50,7 +50,7 @@ function EditProjectPage() {
 
     try {
       await projectsApi.updateProject(projectId, projectData);
-      setSuccess('Project updated successfully!');
+      setSuccess('Projekt úspěšně upraven!');
       
       // Refresh project data
       const updatedProject = await projectsApi.getProject(projectId);

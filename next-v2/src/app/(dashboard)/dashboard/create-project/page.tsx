@@ -23,7 +23,7 @@ function CreateProjectPage() {
   
       try {
         await projectsApi.createProject(projectData);
-        setSuccess('Project created successfully!');
+        setSuccess('Projekt úspěšně založen!');
         
         // Redirect to the project page after a short delay
         setTimeout(() => {

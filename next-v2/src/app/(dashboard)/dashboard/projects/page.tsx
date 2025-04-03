@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { withAuth } from '@/lib/auth';
 import { useAuth } from '@/lib/auth';
 import { Project, ProjectFilters } from '@/lib/types';
-import { projectsApi } from '@/lib/api';
+import { projectsApi, visibleProjectsApi } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { ProjectFilters as ProjectFiltersComponent } from '@/components/Projects/ProjectFilters';
@@ -42,7 +42,7 @@ function ProjectsPage() {
         params.keywords = newFilters.keywords.join(',');
       }
 
-      const response = await projectsApi.getProjects(params);
+      const response = await visibleProjectsApi.getProjects(params);
       
       // If it's page 1, replace projects; otherwise, append
       if (pageNum === 1) {

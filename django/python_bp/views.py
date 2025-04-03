@@ -129,14 +129,104 @@ def public_project_detail(request, pk):
     serializer = ProjectDetailSerializer(project)
     return Response(serializer.data)
 
+
+@swagger_auto_schema(
+    method='get',
+    operation_description="List all projects visible to current user (own projects + public projects)",
+    operation_summary="Get list of all visible projects",
+    manual_parameters=[
+        openapi.Parameter('year', openapi.IN_QUERY, description="Filter by year", type=openapi.TYPE_INTEGER),
+        openapi.Parameter('field', openapi.IN_QUERY, description="Filter by field of study", type=openapi.TYPE_STRING),
+        openapi.Parameter('status', openapi.IN_QUERY, description="Filter by status", type=openapi.TYPE_STRING),
+        openapi.Parameter('search', openapi.IN_QUERY, description="Search in title, description, and keywords", type=openapi.TYPE_STRING),
+        openapi.Parameter('type_of_work', openapi.IN_QUERY, description="Filter by type of work", type=openapi.TYPE_STRING),
+        openapi.Parameter('keywords', openapi.IN_QUERY, description="Filter by keywords (comma separated)", type=openapi.TYPE_STRING),
+        openapi.Parameter('ordering', openapi.IN_QUERY, description="Order results by specified fields (e.g. -year,title)", type=openapi.TYPE_STRING),
+    ],
+    responses={200: ProjectListSerializer(many=True)}
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def visible_projects_list(request):
+    """
+    List all projects visible to current user (own projects + public projects)
+    """
+    user = request.user
+    
+    # Get projects based on user role
+    if user.role == 'admin':
+        # Administrators see all non-deleted projects
+        projects = Project.objects.filter(deleted=False)
+    elif user.role == 'teacher':
+        # Teachers see projects they're assigned to + public projects
+        teacher_projects = ProjectTeacher.objects.filter(teacher=user).values_list('project_id', flat=True)
+        projects = Project.objects.filter(
+            Q(id__in=teacher_projects) | Q(public_visibility=True),
+            deleted=False
+        )
+    else:  # student or any other role
+        # Students see their own projects + public projects
+        projects = Project.objects.filter(
+            Q(student=user) | Q(public_visibility=True),
+            deleted=False
+        )
+    
+    # Apply filters if provided
+    year = request.query_params.get('year', None)
+    if year:
+        projects = projects.filter(year=year)
+        
+    field = request.query_params.get('field', None)
+    if field:
+        projects = projects.filter(field=field)
+    
+    status_param = request.query_params.get('status', None)
+    if status_param:
+        projects = projects.filter(status=status_param)
+    
+    type_of_work = request.query_params.get('type_of_work', None)
+    if type_of_work:
+        projects = projects.filter(type_of_work=type_of_work)
+    
+    # Apply search if provided
+    search = request.query_params.get('search', None)
+    if search:
+        projects = projects.filter(
+            Q(title__icontains=search) | 
+            Q(description__icontains=search) | 
+            Q(keywords__contains=[search])
+        )
+    
+    # Filter by keywords
+    keywords = request.query_params.get('keywords', None)
+    if keywords:
+        keyword_list = keywords.split(',')
+        for keyword in keyword_list:
+            projects = projects.filter(keywords__contains=[keyword.strip()])
+    
+    # Apply ordering
+    ordering = request.query_params.get('ordering', '-year,title')
+    if ordering:
+        ordering_fields = ordering.split(',')
+        projects = projects.order_by(*ordering_fields)
+    
+    # Apply pagination
+    from rest_framework.pagination import PageNumberPagination
+    paginator = PageNumberPagination()
+    paginator.page_size = 20
+    result_page = paginator.paginate_queryset(projects, request)
+    
+    serializer = ProjectListSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
 class ProjectViewSet(viewsets.ModelViewSet):
     """
     ViewSet for managing projects. 
     
     Requires authentication. Access is controlled based on user roles:
     - Admin: sees all non-deleted projects
-    - Teacher: sees projects they're assigned to + public projects
-    - Student: sees their own projects + public projects
+    - Teacher: sees projects they're assigned to
+    - Student: sees their own projects 
     """
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['year', 'field', 'status', 'type_of_work']
@@ -155,8 +245,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
         """
         Return projects based on user role
         - Admin: all non-deleted projects
-        - Teacher: projects they're assigned to + public projects
-        - Student: their own projects + public projects
+        - Teacher: only projects they're assigned to
+        - Student: only their own projects
         """
         user = self.request.user
         
@@ -167,16 +257,16 @@ class ProjectViewSet(viewsets.ModelViewSet):
             # Administrators see all non-deleted projects
             queryset = Project.objects.filter(deleted=False)
         elif user_role == 'teacher':
-            # Teachers see projects where they're assigned and public projects
+            # Teachers see only projects where they're assigned
             teacher_projects = ProjectTeacher.objects.filter(teacher=user).values_list('project_id', flat=True)
             queryset = Project.objects.filter(
-                Q(id__in=teacher_projects) | Q(public_visibility=True),
+                id__in=teacher_projects,
                 deleted=False
             )
         else:  # student or any other role
-            # Students see their own projects and public projects
+            # Students see only their own projects
             queryset = Project.objects.filter(
-                Q(student=user) | Q(public_visibility=True),
+                student=user,
                 deleted=False
             )
         
@@ -308,19 +398,12 @@ class ProjectTeacherViewSet(viewsets.ModelViewSet):
         if user.role == 'admin':
             return ProjectTeacher.objects.all()
         elif user.role == 'teacher':
-            # Teachers see all relationships where they are teachers and relationships for public projects
-            teacher_projects = ProjectTeacher.objects.filter(teacher=user).values_list('project_id', flat=True)
-            public_projects = Project.objects.filter(public_visibility=True).values_list('id', flat=True)
-            return ProjectTeacher.objects.filter(
-                Q(teacher=user) | Q(project_id__in=public_projects)
-            )
+            # Teachers see only relationships where they are teachers
+            return ProjectTeacher.objects.filter(teacher=user)
         else:  # student
-            # Students see teachers on their projects and on public projects
+            # Students see only teachers on their projects
             student_projects = Project.objects.filter(student=user).values_list('id', flat=True)
-            public_projects = Project.objects.filter(public_visibility=True).values_list('id', flat=True)
-            return ProjectTeacher.objects.filter(
-                Q(project_id__in=student_projects) | Q(project_id__in=public_projects)
-            )
+            return ProjectTeacher.objects.filter(project_id__in=student_projects)
     
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def accept(self, request, pk=None):
@@ -390,19 +473,13 @@ class MilestoneViewSet(viewsets.ModelViewSet):
         if user.role == 'admin':
             return Milestone.objects.all()
         elif user.role == 'teacher':
-            # Učitelé vidí milníky projektů, kde jsou vedoucí/konzultanti, a veřejných projektů
+            # Učitelé vidí pouze milníky projektů, kde jsou vedoucí/konzultanti
             teacher_projects = ProjectTeacher.objects.filter(teacher=user).values_list('project_id', flat=True)
-            public_projects = Project.objects.filter(public_visibility=True).values_list('id', flat=True)
-            return Milestone.objects.filter(
-                Q(project_id__in=teacher_projects) | Q(project_id__in=public_projects)
-            )
+            return Milestone.objects.filter(project_id__in=teacher_projects)
         else:  # student
-            # Studenti vidí milníky na svých projektech a na veřejných projektech
+            # Studenti vidí pouze milníky na svých projektech
             student_projects = Project.objects.filter(student=user).values_list('id', flat=True)
-            public_projects = Project.objects.filter(public_visibility=True).values_list('id', flat=True)
-            return Milestone.objects.filter(
-                Q(project_id__in=student_projects) | Q(project_id__in=public_projects)
-            )
+            return Milestone.objects.filter(project_id__in=student_projects)
 
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def update_completion(self, request, pk=None):
@@ -466,12 +543,12 @@ class CommentViewSet(viewsets.ModelViewSet):
         if user.role == 'teacher':
             teacher_projects = ProjectTeacher.objects.filter(teacher=user).values_list('project_id', flat=True)
             visible_projects = Project.objects.filter(
-                Q(id__in=teacher_projects) | Q(public_visibility=True),
+                id__in=teacher_projects,
                 deleted=False
             ).values_list('id', flat=True)
         else:  # student
             visible_projects = Project.objects.filter(
-                Q(student=user) | Q(public_visibility=True),
+                student=user,
                 deleted=False
             ).values_list('id', flat=True)
         
@@ -495,22 +572,16 @@ class ConsultationViewSet(viewsets.ModelViewSet):
         if user.role == 'admin':
             return Consultation.objects.all()
         elif user.role == 'teacher':
-            # Učitelé vidí konzultace, kde jsou vedoucími, a konzultace veřejných projektů
+            # Učitelé vidí konzultace, kde jsou vedoucími
             teacher_projects = ProjectTeacher.objects.filter(teacher=user).values_list('project_id', flat=True)
-            public_projects = Project.objects.filter(public_visibility=True).values_list('id', flat=True)
             return Consultation.objects.filter(
                 Q(teacher=user) | 
-                Q(project_id__in=teacher_projects) | 
-                Q(project_id__in=public_projects)
+                Q(project_id__in=teacher_projects)
             )
         else:  # student
-            # Studenti vidí konzultace svých projektů a veřejných projektů
+            # Studenti vidí konzultace pouze svých projektů
             student_projects = Project.objects.filter(student=user).values_list('id', flat=True)
-            public_projects = Project.objects.filter(public_visibility=True).values_list('id', flat=True)
-            return Consultation.objects.filter(
-                Q(project_id__in=student_projects) | 
-                Q(project_id__in=public_projects)
-            )
+            return Consultation.objects.filter(project_id__in=student_projects)
 
     def perform_create(self, serializer):
         if self.request.user.role == 'teacher':
@@ -531,22 +602,16 @@ class ProjectEvaluationViewSet(viewsets.ModelViewSet):
         if user.role == 'admin':
             return ProjectEvaluation.objects.all()
         elif user.role == 'teacher':
-            # Učitelé vidí hodnocení projektů, kde jsou vedoucí/konzultanti/oponenti, a veřejné hodnocení
+            # Učitelé vidí hodnocení projektů, kde jsou vedoucí/konzultanti/oponenti
             teacher_projects = ProjectTeacher.objects.filter(teacher=user).values_list('project_id', flat=True)
-            public_projects = Project.objects.filter(public_visibility=True).values_list('id', flat=True)
             return ProjectEvaluation.objects.filter(
                 Q(teacher=user) | 
-                Q(project_id__in=teacher_projects) | 
-                Q(project_id__in=public_projects)
+                Q(project_id__in=teacher_projects)
             )
         else:  # student
-            # Studenti vidí hodnocení svých projektů a veřejných projektů
+            # Studenti vidí hodnocení pouze svých projektů
             student_projects = Project.objects.filter(student=user).values_list('id', flat=True)
-            public_projects = Project.objects.filter(public_visibility=True).values_list('id', flat=True)
-            return ProjectEvaluation.objects.filter(
-                Q(project_id__in=student_projects) | 
-                Q(project_id__in=public_projects)
-            )
+            return ProjectEvaluation.objects.filter(project_id__in=student_projects)
 
     def perform_create(self, serializer):
         if self.request.user.role == 'teacher':

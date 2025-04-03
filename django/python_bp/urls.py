@@ -27,6 +27,7 @@ urlpatterns = [
     # Public API endpoints (no authentication required)
     path('public/projects/', views.public_projects_list, name='public-projects-list'),
     path('public/projects/<int:pk>/', views.public_project_detail, name='public-project-detail'),
+    path('visible-projects/', views.visible_projects_list, name='visible-projects-list'),
     
     # Authenticated API endpoints
     path('', include(router.urls)),
