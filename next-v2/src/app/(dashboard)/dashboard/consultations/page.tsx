@@ -218,7 +218,7 @@ function ConsultationsDashboardPage() {
         
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
           </div>
         ) : sortedDates.length === 0 ? (
 <div className="text-center py-8 bg-white shadow rounded-lg">
@@ -285,7 +285,7 @@ function ConsultationsDashboardPage() {
                               <div className="mt-2">
                                 <Link 
                                   href={`/dashboard/projects/${project.id}`}
-                                  className="text-blue-600 hover:text-blue-800 font-medium"
+                                  className="text-orange-600 hover:text-orange-800 font-medium"
                                 >
                                   {project.title}
                                 </Link>
@@ -306,7 +306,7 @@ function ConsultationsDashboardPage() {
                               <div className="mt-3 flex justify-end">
                                 <Link 
                                   href={`/dashboard/projects/${project.id}/consultations`}
-                                  className="text-sm text-blue-600 hover:text-blue-800"
+                                  className="text-sm text-orange-600 hover:text-orange-800"
                                 >
                                   Zobrazit všechny konzultace
                                 </Link>

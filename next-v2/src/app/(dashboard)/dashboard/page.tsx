@@ -95,7 +95,7 @@ function Dashboard() {
             <div className="space-y-4">
               {loading.projects ? (
                 <div className="flex justify-center py-4">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-600"></div>
                 </div>
               ) : recentProjects.length === 0 ? (
                 <div className="text-center py-4">
@@ -115,7 +115,7 @@ function Dashboard() {
                       <div className="flex justify-between items-start">
                         <Link 
                           href={`/dashboard/projects/${project.id}`}
-                          className="text-blue-600 hover:text-blue-800 font-medium"
+                          className="text-orange-600 hover:text-orange-800 font-medium"
                         >
                           {project.title}
                         </Link>
@@ -136,7 +136,7 @@ function Dashboard() {
                     </div>
                   ))}
                   <div className="mt-4 text-right">
-                    <Link href="/dashboard/projects" className="text-blue-600 hover:text-blue-800 text-sm">
+                    <Link href="/dashboard/projects" className="text-orange-600 hover:text-orange-800 text-sm">
                       Zobrazit všechny projekty →
                     </Link>
                   </div>
@@ -150,7 +150,7 @@ function Dashboard() {
             <div className="space-y-4">
               {loading.milestones ? (
                 <div className="flex justify-center py-4">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-600"></div>
                 </div>
               ) : upcomingMilestones.length === 0 ? (
                 <div className="text-center py-4">
@@ -171,7 +171,7 @@ function Dashboard() {
                         <div>
                           <Link 
                             href={`/dashboard/projects/${milestone.project}/milestones`}
-                            className="text-blue-600 hover:text-blue-800 font-medium"
+                            className="text-orange-600 hover:text-orange-800 font-medium"
                           >
                             {milestone.title}
                           </Link>
@@ -179,7 +179,7 @@ function Dashboard() {
                             <div className="flex items-center">
                               <div className="w-full bg-gray-200 rounded-full h-2.5 mr-2">
                                 <div 
-                                  className="bg-blue-600 h-2.5 rounded-full" 
+                                  className="bg-orange-600 h-2.5 rounded-full" 
                                   style={{ width: `${milestone.completion || 0}%` }}
                                 ></div>
                               </div>
@@ -208,7 +208,7 @@ function Dashboard() {
                     </div>
                   ))}
                   <div className="mt-4 text-right">
-                    <Link href="/dashboard/milestones" className="text-blue-600 hover:text-blue-800 text-sm">
+                    <Link href="/dashboard/milestones" className="text-orange-600 hover:text-orange-800 text-sm">
                      Přehled všech milníků →
                     </Link>
                   </div>
@@ -223,7 +223,7 @@ function Dashboard() {
               <div className="space-y-4">
                 {loading.consultations ? (
                   <div className="flex justify-center py-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-600"></div>
                   </div>
                 ) : upcomingConsultations.length === 0 ? (
                   <div className="text-center py-4">
@@ -264,7 +264,7 @@ function Dashboard() {
                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                               <Link 
                                 href={`/dashboard/projects/${consultation.project}`}
-                                className="text-blue-600 hover:text-blue-800"
+                                className="text-orange-600 hover:text-orange-800"
                               >
                                 Přehled všech projektů
                               </Link>

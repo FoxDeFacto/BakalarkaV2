@@ -110,7 +110,7 @@ export default function PublicProjectsPage() {
 
           {loading && projects.length === 0 ? (
             <div className="flex justify-center py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
             </div>
           ) : projects.length === 0 ? (
             <div className="text-center py-8 bg-white shadow rounded-lg">

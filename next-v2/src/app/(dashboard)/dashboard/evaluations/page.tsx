@@ -92,7 +92,7 @@ function EvaluationsDashboardPage() {
         
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
           </div>
         ) : Object.keys(evaluationsByProject).length === 0 ? (
           <div className="text-center py-8 bg-white shadow rounded-lg">
@@ -142,7 +142,7 @@ function EvaluationsDashboardPage() {
                     <div className="flex items-center">
                       <div className="mr-4">
                         <div className="text-xs text-gray-500 uppercase">Průměrné hodnocené</div>
-                        <div className="text-2xl font-bold text-blue-600">{averageScore}<span className="text-sm text-gray-500">/100</span></div>
+                        <div className="text-2xl font-bold text-orange-600">{averageScore}<span className="text-sm text-gray-500">/100</span></div>
                       </div>
                       <Badge variant={
                         project.status === 'completed' ? 'green' : 
@@ -163,17 +163,17 @@ function EvaluationsDashboardPage() {
                           return (
                             <div 
                               key={evaluation.id} 
-                              className={`p-4 rounded-lg ${isMyEvaluation ? 'bg-blue-50 border border-blue-100' : 'bg-gray-50'}`}
+                              className={`p-4 rounded-lg ${isMyEvaluation ? 'bg-orange-50 border border-orange-100' : 'bg-gray-50'}`}
                             >
                               <div className="flex justify-between items-start">
                                 <div className="flex items-center">
-                                  <div className="flex-shrink-0 h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                                  <div className="flex-shrink-0 h-10 w-10 bg-orange-600 rounded-full flex items-center justify-center text-white">
                                     {evaluation.teacher_name.charAt(0).toUpperCase()}
                                   </div>
                                   <div className="ml-4">
                                     <div className="text-sm font-medium text-gray-900">
                                       {evaluation.teacher_name}
-                                      {isMyEvaluation && <span className="ml-2 text-blue-600">(You)</span>}
+                                      {isMyEvaluation && <span className="ml-2 text-orange-600">(You)</span>}
                                     </div>
                                     <div className="text-xs text-gray-500">
                                       {new Date(evaluation.created_at).toLocaleDateString()}
@@ -181,7 +181,7 @@ function EvaluationsDashboardPage() {
                                   </div>
                                 </div>
                                 <div className="flex items-center">
-                                  <div className="text-xl font-bold text-blue-600">{evaluation.score}</div>
+                                  <div className="text-xl font-bold text-orange-600">{evaluation.score}</div>
                                   <div className="text-sm text-gray-500 ml-1">/100</div>
                                 </div>
                               </div>

@@ -134,7 +134,7 @@ export function ProjectCard({ project, isPublic }: ProjectCardProps) {
         <div className="mt-4">
           <Link
             href={isPublic ? `/projects-public/${project.id}` : `/projects/${project.id}`}
-            className="text-blue-600 hover:text-blue-800 font-medium"
+            className="text-orange-600 hover:text-orange-800 font-medium"
           >
             Zobrazit detail →
           </Link>

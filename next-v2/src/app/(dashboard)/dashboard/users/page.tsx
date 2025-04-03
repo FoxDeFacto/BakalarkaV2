@@ -248,7 +248,7 @@ function UsersManagementPage() {
         {/* Users list */}
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
           </div>
         ) : filteredUsers.length === 0 ? (
           <div className="text-center py-8 bg-white shadow rounded-lg">
@@ -300,7 +300,7 @@ function UsersManagementPage() {
                     <tr key={user.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                          <div className="flex-shrink-0 h-10 w-10 bg-orange-600 rounded-full flex items-center justify-center text-white">
                             {user.username.charAt(0).toUpperCase()}
                           </div>
                           <div className="ml-4">

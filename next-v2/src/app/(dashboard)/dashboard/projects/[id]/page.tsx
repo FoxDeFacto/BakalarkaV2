@@ -212,7 +212,7 @@ function ProjectDetailPage() {
     return (
       <DashboardLayout>
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
         </div>
       </DashboardLayout>
     );
@@ -246,7 +246,7 @@ function ProjectDetailPage() {
         <div className="mb-6 flex justify-between items-center">
           <Link 
             href="/dashboard/projects" 
-            className="inline-flex items-center text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center text-orange-600 hover:text-orange-800"
           >
             <ChevronLeftIcon className="h-5 w-5 mr-1" />
             Zpět na projekty
@@ -543,7 +543,7 @@ function ProjectDetailPage() {
                       <tr key={teacher.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="flex-shrink-0 h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                            <div className="flex-shrink-0 h-10 w-10 bg-orange-600 rounded-full flex items-center justify-center text-white">
                               {teacher.teacher_name.charAt(0).toUpperCase()}
                             </div>
                             <div className="ml-4">
@@ -609,7 +609,7 @@ function ProjectDetailPage() {
                   variant="primary"
                   onClick={() => setIsAssignTeacherModalOpen(true)}
                 >
-                  Assign Teacher
+                  Přiřadit učitele
                 </Button>
               </div>
             )}
@@ -638,7 +638,7 @@ function ProjectDetailPage() {
             </Link>
           )}
           
-          <Link href={`/projects-public/${projectId}`} target="_blank">
+          <Link href={`/projects-public`} target="_blank">
             <Button variant="outline">
             Zobrazit zveřejněné projekty
             </Button>
@@ -649,13 +649,13 @@ function ProjectDetailPage() {
         <Modal
           isOpen={isAssignTeacherModalOpen}
           onClose={() => setIsAssignTeacherModalOpen(false)}
-          title="Assign Teacher to Project"
+          title="Přiřadit učitele k projektu"
           size="md"
         >
           <div className="space-y-4">
             <div>
               <Select
-                label="Select Teacher"
+                label="Vyberte učitele"
                 value={selectedTeacher?.toString() || ''}
                 onChange={(e) => setSelectedTeacher(Number(e.target.value))}
                 options={[

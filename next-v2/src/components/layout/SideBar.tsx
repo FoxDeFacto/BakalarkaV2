@@ -92,13 +92,13 @@ export default function Sidebar() {
                 href={item.href}
                 className={`${
                   item.current
-                    ? 'bg-blue-50 text-blue-700'
+                    ? 'bg-orange-50 text-orange-700'
                     : 'text-gray-700 hover:bg-gray-100'
                 } group flex items-center px-3 py-2 text-sm font-medium rounded-md`}
               >
                 <item.icon
                   className={`${
-                    item.current ? 'text-blue-600' : 'text-gray-500 group-hover:text-gray-600'
+                    item.current ? 'text-orange-600' : 'text-gray-500 group-hover:text-gray-600'
                   } mr-3 h-5 w-5`}
                   aria-hidden="true"
                 />

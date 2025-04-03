@@ -151,7 +151,7 @@ function MilestonesPage() {
     return (
       <DashboardLayout>
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
         </div>
       </DashboardLayout>
     );
@@ -179,7 +179,7 @@ function MilestonesPage() {
           <div>
             <Link 
               href={`/dashboard/projects/${projectId}`} 
-              className="inline-flex items-center text-blue-600 hover:text-blue-800"
+              className="inline-flex items-center text-orange-600 hover:text-orange-800"
             >
               <ChevronLeftIcon className="h-5 w-5 mr-1" />
               Zprátky
@@ -237,7 +237,7 @@ function MilestonesPage() {
               <div className="mt-6">
                 <Button variant="primary" onClick={handleCreateMilestone}>
                   <PlusIcon className="h-4 w-4 mr-1 inline" />
-                  Vytvořit první milníék
+                  Vytvořit první milník
                 </Button>
               </div>
             )}
@@ -313,7 +313,7 @@ function MilestonesPage() {
                             (milestone.completion ?? 0) === 100 
                             ? 'bg-green-600' 
                             : (milestone.completion ?? 0) > 0 
-                                ? 'bg-blue-600' 
+                                ? 'bg-orange-600' 
                                 : ''
                         }`}
                         style={{ width: `${milestone.completion ?? 0}%` }}

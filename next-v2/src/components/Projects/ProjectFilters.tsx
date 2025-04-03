@@ -183,13 +183,13 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
               {filters.keywords.map((keyword) => (
                 <div
                   key={keyword}
-                  className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm flex items-center"
+                  className="bg-orange-100 text-orange-800 rounded-full px-3 py-1 text-sm flex items-center"
                 >
                   {keyword}
                   <button
                     type="button"
                     onClick={() => handleRemoveKeyword(keyword)}
-                    className="ml-1.5 text-blue-600 hover:text-blue-800"
+                    className="ml-1.5 text-orange-600 hover:text-orange-800"
                   >
                     <XMarkIcon className="h-4 w-4" />
                   </button>

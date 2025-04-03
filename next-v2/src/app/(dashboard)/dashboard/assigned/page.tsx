@@ -131,7 +131,7 @@ function AssignedProjectsPage() {
   return (
     <DashboardLayout>
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900 mb-6">Assigned Projects</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 mb-6">Přiřazený projekty</h1>
         
         {error && (
           <Alert variant="danger" message={error} />
@@ -143,7 +143,7 @@ function AssignedProjectsPage() {
         
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
           </div>
         ) : projects.length === 0 ? (
           <div className="text-center py-8 bg-white shadow rounded-lg">

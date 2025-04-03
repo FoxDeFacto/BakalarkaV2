@@ -84,7 +84,7 @@ export default function PublicProjectDetailPage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
       </div>
     );
   }
@@ -98,7 +98,7 @@ export default function PublicProjectDetailPage() {
           message={error || 'Project not found'}
         />
         <div className="mt-4">
-          <Link href="/projects-public" className="text-blue-600 hover:text-blue-800">
+          <Link href="/projects-public" className="text-orange-600 hover:text-orange-800">
             ← Zpět
           </Link>
         </div>
@@ -127,7 +127,7 @@ export default function PublicProjectDetailPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="mb-6">
-        <Link href="/projects-public" className="inline-flex items-center text-blue-600 hover:text-blue-800">
+        <Link href="/projects-public" className="inline-flex items-center text-orange-600 hover:text-orange-800">
           <ChevronLeftIcon className="h-5 w-5 mr-1" />
           Zpět
         </Link>
@@ -282,7 +282,7 @@ export default function PublicProjectDetailPage() {
               <div className="space-y-3">
                 {project.teachers.map((teacher) => (
                   <div key={teacher.id} className="flex items-start">
-                    <div className="flex-shrink-0 h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                    <div className="flex-shrink-0 h-10 w-10 bg-orange-600 rounded-full flex items-center justify-center text-white">
                       {teacher.teacher_name.charAt(0).toUpperCase()}
                     </div>
                     <div className="ml-3">
@@ -330,7 +330,7 @@ export default function PublicProjectDetailPage() {
             ) : (
               <div className="mb-6 bg-gray-50 p-4 rounded-md">
                 <p className="text-gray-700">
-                  <Link href="/login" className="text-blue-600 hover:text-blue-800">
+                  <Link href="/login" className="text-orange-600 hover:text-orange-800">
                     Přihlášení
                   </Link>
                   {' '} pro přidání komentáře.
@@ -352,7 +352,7 @@ export default function PublicProjectDetailPage() {
                     .map((comment) => (
                       <div key={comment.id} className="bg-gray-50 p-4 rounded-md">
                         <div className="flex items-start">
-                          <div className="flex-shrink-0 h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                          <div className="flex-shrink-0 h-10 w-10 bg-orange-600 rounded-full flex items-center justify-center text-white">
                             {comment.user_name?.charAt(0).toUpperCase() || '?'}
                           </div>
                           <div className="ml-3 flex-1">

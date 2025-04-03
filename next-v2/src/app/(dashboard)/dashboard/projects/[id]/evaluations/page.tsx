@@ -142,7 +142,7 @@ function EvaluationsPage() {
     return (
       <DashboardLayout>
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
         </div>
       </DashboardLayout>
     );
@@ -170,7 +170,7 @@ function EvaluationsPage() {
           <div>
             <Link 
               href={`/dashboard/projects/${projectId}`} 
-              className="inline-flex items-center text-blue-600 hover:text-blue-800"
+              className="inline-flex items-center text-orange-600 hover:text-orange-800"
             >
               <ChevronLeftIcon className="h-5 w-5 mr-1" />
               Zpátky
@@ -223,7 +223,7 @@ function EvaluationsPage() {
               </div>
               <div className="mt-4 md:mt-0">
                 <div className="flex items-center">
-                  <div className="text-2xl font-bold text-blue-600">{calculateAverageScore()}</div>
+                  <div className="text-2xl font-bold text-orange-600">{calculateAverageScore()}</div>
                   <div className="text-sm text-gray-500 ml-1">/100</div>
                 </div>
                 <p className="text-sm text-gray-500 text-center">Průměrné body</p>
@@ -274,7 +274,7 @@ function EvaluationsPage() {
               <div key={evaluation.id} className="bg-white shadow rounded-lg overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                    <div className="flex-shrink-0 h-10 w-10 bg-orange-600 rounded-full flex items-center justify-center text-white">
                       {evaluation.teacher_name.charAt(0).toUpperCase()}
                     </div>
                     <div className="ml-4">
@@ -285,7 +285,7 @@ function EvaluationsPage() {
                     </div>
                   </div>
                   <div className="flex items-center">
-                    <div className="text-2xl font-bold text-blue-600">{evaluation.score}</div>
+                    <div className="text-2xl font-bold text-orange-600">{evaluation.score}</div>
                     <div className="text-sm text-gray-500 ml-1">/100</div>
                     
                     {/* Edit/Delete actions for the teacher who submitted the evaluation or admin */}

@@ -220,13 +220,13 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
               {formData.keywords.map((keyword) => (
                 <div
                   key={keyword}
-                  className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm flex items-center"
+                  className="bg-orange-100 text-orange-800 rounded-full px-3 py-1 text-sm flex items-center"
                 >
                   {keyword}
                   <button
                     type="button"
                     onClick={() => handleRemoveKeyword(keyword)}
-                    className="ml-1.5 text-blue-600 hover:text-blue-800"
+                    className="ml-1.5 text-orange-600 hover:text-orange-800"
                   >
                     <XMarkIcon className="h-4 w-4" />
                   </button>
@@ -244,7 +244,7 @@ export function ProjectForm({ initialData = {}, onSubmit, isLoading = false }: P
               type="checkbox"
               checked={formData.public_visibility || false}
               onChange={(e) => setFormData((prev) => ({ ...prev, public_visibility: e.target.checked }))}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
             />
             <label htmlFor="public_visibility" className="ml-2 block text-sm text-gray-900">
               Udělat tento projekt veřejný

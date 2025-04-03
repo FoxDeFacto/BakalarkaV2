@@ -55,11 +55,11 @@ function MyProjectsPage() {
   });
 
   const statusDisplayOrder = [
-    { key: 'in_progress', display: 'In Progress' },
-    { key: 'draft', display: 'Draft' },
-    { key: 'submitted', display: 'Submitted' },
-    { key: 'evaluated', display: 'Evaluated' },
-    { key: 'completed', display: 'Completed' },
+    { key: 'in_progress', display: 'Rozpracované' },
+    { key: 'draft', display: 'Náčrt' },
+    { key: 'submitted', display: 'Odevzdané' },
+    { key: 'evaluated', display: 'Ohodnocené' },
+    { key: 'completed', display: 'Dokončené' },
   ];
 
   return (
@@ -67,13 +67,13 @@ function MyProjectsPage() {
       <div>
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">My Projects</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">Moje projekty</h1>
             <p className="mt-1 text-sm text-gray-500">
-              Manage your project portfolio
+              Správá prací
             </p>
           </div>
           <Link href="/dashboard/create-project">
-            <Button variant="primary">Create Project</Button>
+            <Button variant="primary">Vytvořit projekt</Button>
           </Link>
         </div>
 
@@ -83,7 +83,7 @@ function MyProjectsPage() {
 
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
           </div>
         ) : projects.length === 0 ? (
           <div className="text-center py-8 bg-white shadow rounded-lg">
@@ -165,7 +165,7 @@ function MyProjectsPage() {
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                               <Link 
                                 href={`/dashboard/projects/${project.id}`}
-                                className="text-blue-600 hover:text-blue-900 mr-4"
+                                className="text-orange-600 hover:text-orange-900 mr-4"
                               >
                                 Zobrazit
                               </Link>

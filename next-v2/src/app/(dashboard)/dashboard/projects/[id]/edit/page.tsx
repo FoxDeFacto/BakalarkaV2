@@ -67,7 +67,7 @@ function EditProjectPage() {
     return (
       <DashboardLayout>
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
         </div>
       </DashboardLayout>
     );
@@ -94,7 +94,7 @@ function EditProjectPage() {
         <div className="mb-6">
           <Link 
             href={`/dashboard/projects/${projectId}`} 
-            className="inline-flex items-center text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center text-orange-600 hover:text-orange-800"
           >
             <ChevronLeftIcon className="h-5 w-5 mr-1" />
             Zpátky

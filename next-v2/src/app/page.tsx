@@ -35,10 +35,10 @@ export default function HomePage() {
       </div>
 
       {/* Features section */}
-      <div className="py-16 sm:py-24 bg-blue-200">
+      <div className="py-16 sm:py-24 bg-orange-200">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:text-center">
-            <h2 className="text-base font-semibold leading-7 text-blue-600">Prozkoumejte naší platformu</h2>
+            <h2 className="text-base font-semibold leading-7 text-orange-600">Prozkoumejte naší platformu</h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
              Všechno pro správu projektů na jednom místě
             </p>
@@ -50,7 +50,7 @@ export default function HomePage() {
             <dl className="grid max-w-xl grid-cols-1 gap-y-10 gap-x-8 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
               <div className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
-                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-orange-600">
                     <FileText color='white' size={32}></FileText>
                   </div>
                   Projektová dokumentace
@@ -61,7 +61,7 @@ export default function HomePage() {
               </div>
               <div className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
-                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-orange-600">
                     <Handshake color='white' size={32}></Handshake>
                   </div>
                   Spolupráce mezi učiteli a studenty
@@ -72,7 +72,7 @@ export default function HomePage() {
               </div>
               <div className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
-                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-orange-600">
                     <ListChecks color='white' size={32}></ListChecks>
                   </div>
                   Sledování postupu
@@ -83,7 +83,7 @@ export default function HomePage() {
               </div>
               <div className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
-                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-orange-600">
                     <Speech color='white' size={32}></Speech>
                   </div>
                   Nástroje pro komunikaci
@@ -98,22 +98,22 @@ export default function HomePage() {
       </div>
 
       {/* CTA section */}
-      <div className="bg-blue-600">
+      <div className="bg-orange-600">
         <div className="px-6 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-white text-3xl font-bold tracking-tight sm:text-4xl ">
             Začněte se svými projekty již dnes
             </p>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-blue-100">
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-orange-100">
             Připojte se k naší platformě, kde můžete prezentovat svou práci, získat vedení od učitelů a spolupracovat s vrstevníky.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link href="/register">
-                <Button variant="outline" size="lg" className="bg-white text-black hover:bg-blue-50">
+                <Button variant="outline" size="lg" className="bg-white text-black hover:bg-orange-50">
                   Začínáme
                 </Button>
               </Link>
-              <Link href="/projects-public" className="p-3 rounded bg-white text-black hover:bg-blue-50">
+              <Link href="/projects-public" className="p-3 rounded bg-white text-black hover:bg-orange-50">
                 Procházejte projekty <span aria-hidden="true">→</span>
               </Link>
             </div>

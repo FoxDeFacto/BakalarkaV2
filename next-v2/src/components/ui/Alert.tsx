@@ -19,14 +19,14 @@ export function Alert({ variant = 'info', title, message, dismissible = true }: 
   }
 
   const variantClasses = {
-    info: 'bg-blue-50 text-blue-800 border-blue-200',
+    info: 'bg-orange-50 text-orange-800 border-orange-200',
     success: 'bg-green-50 text-green-800 border-green-200',
     warning: 'bg-yellow-50 text-yellow-800 border-yellow-200',
     danger: 'bg-red-50 text-red-800 border-red-200',
   };
 
   const iconClasses = {
-    info: 'text-blue-400',
+    info: 'text-orange-400',
     success: 'text-green-400',
     warning: 'text-yellow-400',
     danger: 'text-red-400',
