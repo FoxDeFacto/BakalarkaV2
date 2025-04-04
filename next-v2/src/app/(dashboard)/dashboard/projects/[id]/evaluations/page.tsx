@@ -253,10 +253,10 @@ function EvaluationsPage() {
               {canBeEvaluated 
                 ? (isTeacher || isAdmin)
                   ? hasSubmittedEvaluation
-                    ? 'You have already submitted an evaluation for this project.'
-                    : 'No evaluations have been submitted for this project yet.'
-                  : 'No evaluations have been submitted for this project yet.'
-                : 'This project needs to be submitted before it can be evaluated.'
+                    ? 'Už jste ohodnotili tento projekt.'
+                    : 'Tento projekt zatím nemá žádná hodnocení..'
+                  : 'Tento projekt zatím nemá žádná hodnocení.'
+                : 'Tento projekt ještě není odevzdán, aby mohl být ohodnocen'
               }
             </p>
             {canBeEvaluated && (isTeacher || isAdmin) && !hasSubmittedEvaluation && (

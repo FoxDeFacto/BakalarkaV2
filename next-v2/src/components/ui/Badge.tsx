@@ -1,5 +1,5 @@
 // src/components/ui/Badge.tsx
-type BadgeVariant = 'gray' | 'blue' | 'green' | 'red' | 'yellow';
+type BadgeVariant = 'gray' | 'blue' | 'green' | 'red' | 'yellow' | 'orange';
 type BadgeSize = 'sm' | 'md' | 'lg';
 
 interface BadgeProps {
@@ -12,10 +12,11 @@ interface BadgeProps {
 export function Badge({ variant = 'gray', size = 'md', children, className = '' }: BadgeProps) {
   const variantClasses = {
     gray: 'bg-gray-100 text-gray-800',
-    blue: 'bg-orange-100 text-orange-800',
+    blue: 'bg-blue-100 text-blue-800',
     green: 'bg-green-100 text-green-800',
     red: 'bg-red-100 text-red-800',
     yellow: 'bg-yellow-100 text-yellow-800',
+    orange: 'bg-orange-100 text-yellow-800',
   };
 
   const sizeClasses = {

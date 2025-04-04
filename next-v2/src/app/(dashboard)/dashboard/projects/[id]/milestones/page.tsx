@@ -12,15 +12,15 @@ import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { Modal } from '@/components/ui/Modal';
 import { MilestoneForm } from '@/components/milestones/Milestone';
+import { MilestoneCompletionUpdater } from '@/components/milestones/MilestoneCompletionUpdater';
 import { Badge } from '@/components/ui/Badge';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { ChevronLeftIcon, PlusIcon, PencilIcon, TrashIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon, PlusIcon, PencilIcon, TrashIcon, CheckIcon, ClockIcon, CalendarIcon } from '@heroicons/react/24/outline';
 
 function MilestonesPage() {
   const { id } = useParams();
   const projectId = Number(id);
-  //const router = useRouter();
-  const { isTeacher, isAdmin } = useAuth();
+  const { user, isTeacher, isAdmin, isStudent } = useAuth();
   
   const [project, setProject] = useState<Project | null>(null);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
@@ -33,6 +33,9 @@ function MilestonesPage() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentMilestone, setCurrentMilestone] = useState<Milestone | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Check if current user is owner of the project
+  const isProjectOwner = user && project && project.student === user.id;
 
   // Fetch project and milestones
   const fetchData = async () => {
@@ -100,6 +103,7 @@ function MilestonesPage() {
     
     try {
       await milestonesApi.updateCompletion(id, completion);
+      setSuccess('Progress updated successfully');
       
       // Refresh milestone list
       fetchData();
@@ -147,6 +151,40 @@ function MilestonesPage() {
     }
   };
 
+  // Helper function to format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('cs-CZ', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
+  };
+
+  // Function to check if a milestone is overdue
+  const isOverdue = (deadline: string) => {
+    return new Date(deadline) < new Date();
+  };
+
+  // Function to calculate days left or days overdue
+  const getDaysMessage = (deadline: string) => {
+    const today = new Date();
+    const deadlineDate = new Date(deadline);
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays > 0) {
+      return `${diffDays} ${diffDays === 1 ? 'den' : diffDays < 5 ? 'dny' : 'dní'} zbývá`;
+    } else if (diffDays < 0) {
+      const absDiffDays = Math.abs(diffDays);
+      return `${absDiffDays} ${absDiffDays === 1 ? 'den' : absDiffDays < 5 ? 'dny' : 'dní'} po termínu`;
+    } else {
+      return 'Dnes je termín';
+    }
+  };
+
   if (loading) {
     return (
       <DashboardLayout>
@@ -164,7 +202,7 @@ function MilestonesPage() {
           <Alert variant="danger" title="Error" message={error || 'Project not found'} />
           <div className="mt-4">
             <Link href="/dashboard/projects">
-              <Button variant="primary">Back to Projects</Button>
+              <Button variant="primary">Zpět na projekty</Button>
             </Link>
           </div>
         </div>
@@ -182,7 +220,7 @@ function MilestonesPage() {
               className="inline-flex items-center text-orange-600 hover:text-orange-800"
             >
               <ChevronLeftIcon className="h-5 w-5 mr-1" />
-              Zprátky
+              Zpátky
             </Link>
             <h1 className="text-2xl font-semibold text-gray-900 mt-2">Milníky pro {project.title}</h1>
           </div>
@@ -230,8 +268,8 @@ function MilestonesPage() {
             <h3 className="mt-2 text-lg font-medium text-gray-900">Bez milníků</h3>
             <p className="mt-1 text-sm text-gray-500">
               {isTeacher || isAdmin 
-                ? 'Get started by creating a milestone for this project.' 
-                : 'No milestones have been created for this project yet.'}
+                ? 'Začněte vytvořením prvního milníku pro tento projekt.' 
+                : 'Pro tento projekt zatím nebyly vytvořeny žádné milníky.'}
             </p>
             {(isTeacher || isAdmin) && (
               <div className="mt-6">
@@ -245,21 +283,29 @@ function MilestonesPage() {
         ) : (
           <div className="space-y-6">
             {milestones.map((milestone) => {
-              const isOverdue = new Date(milestone.deadline) < new Date() && milestone.status !== 'completed';
-              const displayStatus = isOverdue && milestone.status !== 'overdue' ? 'overdue' : milestone.status;
+              const milestoneIsOverdue = isOverdue(milestone.deadline) && milestone.status !== 'completed';
+              const displayStatus = milestoneIsOverdue && milestone.status !== 'overdue' ? 'overdue' : milestone.status;
+              const daysMessage = getDaysMessage(milestone.deadline);
               
               return (
                 <div key={milestone.id} className="bg-white shadow rounded-lg overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
                     <div>
                       <h2 className="text-lg font-medium text-gray-900">{milestone.title}</h2>
-                      <div className="mt-1 flex items-center">
+                      <div className="mt-1 flex items-center flex-wrap gap-2">
                         <Badge variant={getStatusBadgeColor(displayStatus as MilestoneStatus)}>
-                          {isOverdue && milestone.status !== 'overdue' ? 'Overdue' : milestone.status_display}
+                          {milestoneIsOverdue && milestone.status !== 'overdue' ? 'Po termínu' : milestone.status_display}
                         </Badge>
-                        <span className="ml-2 text-sm text-gray-500">
-                          Lhůta: {new Date(milestone.deadline).toLocaleString()}
-                        </span>
+                        
+                        <div className="flex items-center text-sm">
+                          <CalendarIcon className="h-4 w-4 mr-1 text-gray-500" />
+                          <span className="text-gray-600">{formatDate(milestone.deadline)}</span>
+                        </div>
+                        
+                        <div className={`flex items-center text-sm ${milestoneIsOverdue ? 'text-red-600' : 'text-blue-600'}`}>
+                          <ClockIcon className="h-4 w-4 mr-1" />
+                          <span>{daysMessage}</span>
+                        </div>
                       </div>
                     </div>
                     <div className="flex space-x-2">
@@ -286,52 +332,38 @@ function MilestonesPage() {
                     </div>
                   </div>
                   <div className="p-6">
-                    <div className="mb-4">
+                    <div className="mb-6">
                       <p className="text-gray-700">{milestone.description}</p>
                     </div>
                     
-                    <div className="mt-6">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-700">
-                          Dokočení: {milestone.completion || 0}%
-                        </span>
-                        {milestone.completion === 100 && milestone.status !== 'completed' && (
-                          <Button
-                            variant="success"
-                            size="sm"
-                            className="inline-flex items-center"
-                            onClick={() => handleUpdateCompletion(milestone.id, 100)}
-                          >
-                            <CheckIcon className="h-4 w-4 mr-1" />
-                            Označit jako dokončený
-                          </Button>
-                        )}
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div 
-                        className={`h-2.5 rounded-full ${
-                            (milestone.completion ?? 0) === 100 
-                            ? 'bg-green-600' 
-                            : (milestone.completion ?? 0) > 0 
-                                ? 'bg-orange-600' 
-                                : ''
-                        }`}
-                        style={{ width: `${milestone.completion ?? 0}%` }}
-                        ></div>
-                      </div>
+                    <div className="mt-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                      <h3 className="text-md font-medium text-gray-900 mb-3">Průběh dokončení</h3>
                       
-                      {/* Allow users to update completion via slider */}
-                      <div className="mt-4">
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          step="5"
-                          value={milestone.completion || 0}
-                          onChange={(e) => handleUpdateCompletion(milestone.id, parseInt(e.target.value))}
-                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                        />
-                      </div>
+                      {/* Use new MilestoneCompletionUpdater component */}
+                      <MilestoneCompletionUpdater
+                        milestoneId={milestone.id}
+                        currentCompletion={milestone.completion || 0}
+                        onUpdateCompletion={handleUpdateCompletion}
+                        disabled={!(isTeacher || isAdmin || isProjectOwner)}
+                      />
+                      
+                      {/* Show complete badge when milestone is completed */}
+                      {milestone.status === 'completed' && (
+                        <div className="mt-4 flex items-center text-green-600">
+                          <CheckIcon className="h-5 w-5 mr-2" />
+                          <span className="font-medium">Dokončený milník</span>
+                        </div>
+                      )}
+                      
+                      {/* Show alert for overdue milestones */}
+                      {milestoneIsOverdue && milestone.status !== 'completed' && (
+                        <div className="mt-4 flex items-center text-red-600">
+                          <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                          <span className="font-medium">Termín uplynul. Aktualizujte průběh nebo požádejte o prodloužení.</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

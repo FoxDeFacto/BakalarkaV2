@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { withAuth } from '@/lib/auth';
 import { useAuth } from '@/lib/auth';
 import { Project, ProjectFilters } from '@/lib/types';
-import { projectsApi, visibleProjectsApi } from '@/lib/api';
+import { visibleProjectsApi } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { ProjectFilters as ProjectFiltersComponent } from '@/components/Projects/ProjectFilters';
