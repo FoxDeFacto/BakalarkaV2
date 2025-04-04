@@ -135,3 +135,30 @@ class ProjectCreateUpdateSerializer(serializers.ModelSerializer):
         if value < 2000 or value > current_year + 1:
             raise serializers.ValidationError(f"Rok musí být mezi 2000 a {current_year + 1}")
         return value
+
+# Přidejte tento nový serializér do souboru serializer.py
+
+class ProjectTeacherSimpleSerializer(serializers.ModelSerializer):
+    teacher_name = serializers.ReadOnlyField(source='teacher.username')
+    role_display = serializers.ReadOnlyField(source='get_role_display')
+
+    class Meta:
+        model = ProjectTeacher
+        fields = ['teacher', 'teacher_name', 'role', 'role_display']
+
+
+class ProjectWithTeachersSerializer(serializers.ModelSerializer):
+    student_name = serializers.ReadOnlyField(source='student.username')
+    status_display = serializers.ReadOnlyField(source='get_status_display')
+    type_display = serializers.ReadOnlyField(source='get_type_of_work_display')
+    teachers = ProjectTeacherSimpleSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Project
+        fields = [
+            'id', 'title', 'description', 'year', 'field', 'keywords',
+            'student', 'student_name', 'thumbnail', 'status',
+            'status_display', 'type_of_work', 'type_display',
+            'created_at', 'updated_at', 'teachers'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']

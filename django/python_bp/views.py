@@ -12,7 +12,7 @@ from .models import User, Project, ProjectTeacher, Milestone, Comment, Consultat
 from .serializer import (
     UserSerializer, UserCreateSerializer, ProjectListSerializer, 
     ProjectDetailSerializer, ProjectCreateUpdateSerializer, ProjectTeacherSerializer,
-    MilestoneSerializer, CommentSerializer, ConsultationSerializer, ProjectEvaluationSerializer
+    MilestoneSerializer, CommentSerializer, ConsultationSerializer, ProjectEvaluationSerializer,ProjectWithTeachersSerializer
 )
 from .permissions import IsTeacherOrAdminOrReadOnly, IsTeacherForProject, IsOwnerOrTeacherOrReadOnly, StudentCanAssignTeacherPermission
 
@@ -143,7 +143,7 @@ def public_project_detail(request, pk):
         openapi.Parameter('keywords', openapi.IN_QUERY, description="Filter by keywords (comma separated)", type=openapi.TYPE_STRING),
         openapi.Parameter('ordering', openapi.IN_QUERY, description="Order results by specified fields (e.g. -year,title)", type=openapi.TYPE_STRING),
     ],
-    responses={200: ProjectListSerializer(many=True)}
+    responses={200: ProjectWithTeachersSerializer(many=True)}
 )
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -210,13 +210,16 @@ def visible_projects_list(request):
         ordering_fields = ordering.split(',')
         projects = projects.order_by(*ordering_fields)
     
+    # Předběžně načteme učitele projektů (optimalizace dotazů)
+    projects = projects.prefetch_related('teachers__teacher')
+    
     # Apply pagination
     from rest_framework.pagination import PageNumberPagination
     paginator = PageNumberPagination()
     paginator.page_size = 20
     result_page = paginator.paginate_queryset(projects, request)
     
-    serializer = ProjectListSerializer(result_page, many=True)
+    serializer = ProjectWithTeachersSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 class ProjectViewSet(viewsets.ModelViewSet):

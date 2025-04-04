@@ -13,7 +13,7 @@ import { ProjectFilters as ProjectFiltersComponent } from '@/components/Projects
 import DashboardLayout from '@/components/layout/DashboardLayout';
 
 function ProjectsPage() {
-  const { isStudent } = useAuth();
+  const { user, isAdmin, isTeacher, isStudent } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
   const [filters, setFilters] = useState<ProjectFilters>({});
   const [loading, setLoading] = useState(true);
@@ -75,6 +75,29 @@ function ProjectsPage() {
   const handleLoadMore = useCallback(() => {
     fetchProjects(page + 1);
   }, [fetchProjects, page]);
+
+  const isAssignedToProject = (project: Project) => {
+    if (!user || !isTeacher) return false;
+    console.log(project);
+    return project.teachers?.some(teacher => 
+      teacher.teacher === user.id
+    );
+  };
+
+  // Function to determine the path based on user role, project assignment, and action (view or edit)
+  const getProjectPath = (project: Project, toEdit: boolean) => {
+    // If admin, assigned teacher, or project owner (student), use normal path
+    if ((isAdmin || isAssignedToProject(project) || project.student === user?.id) && toEdit) {
+      return `/dashboard/projects/${project.id}/edit`;
+    } else if (isAdmin || isAssignedToProject(project) || project.student === user?.id) {
+      return `/dashboard/projects/${project.id}`;
+    }
+    
+    // Otherwise, use public path
+    return toEdit 
+      ? `/projects-public/${project.id}` 
+      : `/projects-public/${project.id}`;
+  };
 
   return (
     <DashboardLayout>
@@ -202,18 +225,19 @@ function ProjectsPage() {
                             <div className="text-sm text-gray-500">{project.type_display}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Link 
-                              href={`/dashboard/projects/${project.id}`}
-                              className="text-orange-600 hover:text-orange-900 mr-4"
-                            >
-                              Zobrazit
-                            </Link>
-                            <Link 
-                              href={`/dashboard/projects/${project.id}/edit`}
-                              className="text-indigo-600 hover:text-indigo-900"
-                            >
-                              Upravit
-                            </Link>
+                          <div className="flex justify-between items-center">
+                            <div className="flex space-x-2">
+                              <Link 
+                                href={getProjectPath(project, false)}
+                                className="text-orange-600 hover:text-orange-900 mr-4 flex items-center"
+                              >
+                                Zobrazit
+                              </Link>
+                              <Link href={getProjectPath(project, true)}>
+                                <Button variant="outline">Upravit</Button>
+                              </Link>
+                            </div>
+                          </div>
                           </td>
                         </tr>
                       ))}
