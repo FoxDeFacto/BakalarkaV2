@@ -24,7 +24,7 @@ export function FileUpload({
   const [isLoading, setIsLoading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(
-    currentFile ? `http://localhost:8000/media/${currentFile}` : null
+    currentFile ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${currentFile}` : null
   );
   const inputRef = useRef<HTMLInputElement>(null);
 

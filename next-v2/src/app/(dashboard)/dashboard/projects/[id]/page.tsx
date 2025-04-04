@@ -235,7 +235,7 @@ function ProjectDetailPage() {
                         <span className="font-medium">Dokument projektu</span>
                       </div>
                       <a 
-                        href={`${process.env.NEXT_PUBLIC_API_URL}${project.document}`} 
+                        href={`${process.env.NEXT_PUBLIC_BACKEND_URL}${project.document}`} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-orange-600 hover:text-orange-800"
@@ -259,7 +259,7 @@ function ProjectDetailPage() {
                         <span className="font-medium">Plakát projektu</span>
                       </div>
                       <a 
-                        href={`${process.env.NEXT_PUBLIC_API_URL}${project.poster}`} 
+                        href={`${process.env.NEXT_PUBLIC_BACKEND_URL}${project.poster}`} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-orange-600 hover:text-orange-800"
@@ -278,7 +278,7 @@ function ProjectDetailPage() {
                         <span className="font-medium">Video projektu</span>
                       </div>
                       <a 
-                        href={`${process.env.NEXT_PUBLIC_API_URL}${project.video}`} 
+                        href={`${process.env.NEXT_PUBLIC_BACKEND_URL}${project.video}`} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-orange-600 hover:text-orange-800"

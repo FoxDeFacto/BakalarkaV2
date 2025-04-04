@@ -33,7 +33,7 @@ export function ProjectCard({ project, isPublic }: ProjectCardProps) {
         {project.thumbnail ? (
           <div className="aspect-w-16 aspect-h-9 mb-4">
             <img
-              src={`http://localhost:8000/media/${project.thumbnail}`}
+              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${project.thumbnail}`}
               alt={project.title}
               className="object-cover w-full h-48 rounded"
             />

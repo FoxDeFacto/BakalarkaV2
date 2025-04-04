@@ -163,7 +163,7 @@ export default function PublicProjectDetailPage() {
           {project.thumbnail && (
             <div className="mb-6">
               <img
-                src={`http://localhost:8000/media/${project.thumbnail}`}
+                src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${project.thumbnail}`}
                 alt={project.title}
                 className="w-full max-h-96 object-contain rounded"
               />
@@ -203,7 +203,7 @@ export default function PublicProjectDetailPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {project.document && (
                 <a
-                  href={`http://localhost:8000/media/${project.document}`}
+                  href={`${process.env.NEXT_PUBLIC_BACKEND_URL}${project.document}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50"
@@ -227,7 +227,7 @@ export default function PublicProjectDetailPage() {
 
               {project.poster && (
                 <a
-                  href={`http://localhost:8000/media/${project.poster}`}
+                  href={`${process.env.NEXT_PUBLIC_BACKEND_URL}${project.poster}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50"
@@ -251,7 +251,7 @@ export default function PublicProjectDetailPage() {
 
               {project.video && (
                 <a
-                  href={`http://localhost:8000/media/${project.video}`}
+                  href={`${process.env.NEXT_PUBLIC_BACKEND_URL}${project.video}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50"
