@@ -13,6 +13,7 @@ import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import DashboardLayout from '@/components/layout/DashboardLayout';
+import TeacherAssignment from '@/components/Projects/TeacherAssigment';
 import { 
   PencilIcon, 
   ChatBubbleLeftIcon, 
@@ -20,7 +21,8 @@ import {
   CalendarIcon, 
   DocumentTextIcon,
   AcademicCapIcon,
-  StarIcon
+  StarIcon,
+  UserGroupIcon
 } from '@heroicons/react/24/outline';
 
 function ProjectDetailPage() {
@@ -95,6 +97,16 @@ function ProjectDetailPage() {
       month: '2-digit', 
       year: 'numeric'
     }).format(date);
+  };
+
+  // Handler when a teacher is assigned or removed
+  const handleTeacherUpdated = async () => {
+    try {
+      const updatedProject = await projectsApi.getProject(projectId);
+      setProject(updatedProject);
+    } catch (err) {
+      console.error('Error refreshing project data:', err);
+    }
   };
 
   if (loading) {
@@ -222,6 +234,27 @@ function ProjectDetailPage() {
               </div>
             </Card>
             
+            {/* Teacher Assignment Card - New Section */}
+            {(isProjectOwner || isTeacher || isAdmin) && (
+              <Card>
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold text-gray-900">Učitelé projektu</h2>
+                  </div>
+                  
+                  <TeacherAssignment
+                    projectId={projectId}
+                    currentTeachers={project.teachers || []}
+                    onTeacherAssigned={handleTeacherUpdated}
+                    isStudent={isProjectOwner || false}
+                    isTeacher={isTeacher}
+                    isAdmin={isAdmin}
+                    currentUserId={user?.id}
+                  />
+                </div>
+              </Card>
+            )}
+            
             {/* Documents and files */}
             <Card>
               <div className="p-6">
@@ -341,7 +374,7 @@ function ProjectDetailPage() {
                             Celkem {project.evaluations.length} hodnocení s průměrným skóre{' '}
                             <span className="font-bold text-orange-600">
                               {Math.round(project.evaluations.reduce((acc, e) => acc + e.score, 0) / project.evaluations.length)}
-                            </span>
+                              </span>
                             <span className="text-sm text-gray-500"> / 100</span>
                           </p>
                         </div>
@@ -568,6 +601,7 @@ function ProjectDetailPage() {
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Akce</h2>
                 
                 <div className="space-y-2">
+                
                   <Link href={`/dashboard/projects/${projectId}/milestones`} className="block w-full">
                     <Button variant="outline" className="w-full justify-start">
                       <ClockIcon className="h-5 w-5 mr-2" />
