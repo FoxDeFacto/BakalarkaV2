@@ -24,17 +24,17 @@ export default function RegisterPage() {
     
     // Validation
     if (!username || !email || !password || !confirmPassword) {
-      setError('Please fill in all fields');
+      setError('Prosím vyplňtě všechna pole');
       return;
     }
     
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Hesla se neshodují');
       return;
     }
     
     if (password.length < 8) {
-      setError('Password must be at least 8 characters long');
+      setError('Heslo musí být alespoň 8 znaků');
       return;
     }
     
@@ -55,7 +55,7 @@ export default function RegisterPage() {
     <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Create a new account
+          Vytvořit nový účet
         </h2>
       </div>
 
@@ -71,7 +71,7 @@ export default function RegisterPage() {
             <div>
               <Input
                 id="username"
-                label="Username"
+                label="Uživatelské jméno"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -84,7 +84,7 @@ export default function RegisterPage() {
             <div>
               <Input
                 id="email"
-                label="Email address"
+                label="Email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -97,7 +97,7 @@ export default function RegisterPage() {
             <div>
               <Input
                 id="password"
-                label="Password"
+                label="Heslo"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -110,7 +110,7 @@ export default function RegisterPage() {
             <div>
               <Input
                 id="confirm-password"
-                label="Confirm password"
+                label="Potrvzení hesla"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -128,7 +128,7 @@ export default function RegisterPage() {
                 onChange={(e) => setRole(e.target.value as 'student' | 'teacher')}
                 options={[
                   { value: 'student', label: 'Student' },
-                  { value: 'teacher', label: 'Teacher' },
+                  { value: 'teacher', label: 'Učitel' },
                 ]}
                 fullWidth
                 required
@@ -142,18 +142,18 @@ export default function RegisterPage() {
                 fullWidth
                 isLoading={isLoading}
               >
-                Register
+                Registrace
               </Button>
             </div>
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-500">
-            Already have an account?{' '}
+            Už máte účet?{' '}
             <Link
               href="/login"
               className="font-semibold leading-6 text-orange-600 hover:text-orange-500"
             >
-              Sign in
+              Přihlášení
             </Link>
           </div>
         </div>

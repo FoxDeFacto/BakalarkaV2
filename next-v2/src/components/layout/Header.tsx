@@ -24,7 +24,7 @@ export default function Header() {
       <nav className="bg-orange-800">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
-            <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+            <div className="flex flex-1 items-center justify-center lg:items-stretch lg:justify-start">
               <div className="flex flex-shrink-0 items-center">
                 <span className="text-white font-bold text-xl">Studenstké projekty</span>
               </div>
@@ -41,7 +41,7 @@ export default function Header() {
       <nav className="bg-orange-800">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
-            <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+            <div className="flex flex-1 items-center justify-center lg:items-stretch lg:justify-start">
               <div className="flex flex-shrink-0 items-center">
                 <span className="text-white font-bold text-xl">Studenstké projekty</span>
               </div>
@@ -71,14 +71,21 @@ export default function Header() {
     }
   }
 
+  // Přidáme odkazy na přihlášení a registraci do navigace pro mobilní zobrazení
+  const mobileNavigation = [...navigation];
+  if (!isAuthenticated) {
+    mobileNavigation.push({ name: 'Přihlášení', href: '/login', current: pathname === '/login' });
+    mobileNavigation.push({ name: 'Registrace', href: '/register', current: pathname === '/register' });
+  }
+
   return (
     <Disclosure as="nav" className="bg-orange-800">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                {/* Mobile menu button */}
+              <div className="absolute inset-y-0 left-0 flex items-center lg:hidden">
+                {/* Mobile menu button - změněno z sm:hidden na lg:hidden pro breakpoint 1000px */}
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-orange-200 hover:bg-orange-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Otevřít hlavní menu</span>
@@ -89,11 +96,11 @@ export default function Header() {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+              <div className="flex flex-1 items-center justify-center lg:items-stretch lg:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   <span className="text-white font-bold text-xl">Studenstké projekty</span>
                 </div>
-                <div className="hidden sm:ml-6 sm:block">
+                <div className="hidden lg:ml-6 lg:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
                       <Link
@@ -112,7 +119,7 @@ export default function Header() {
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 lg:static lg:inset-auto lg:ml-6 lg:pr-0">
                 {/* Profile dropdown */}
                 {isAuthenticated ? (
                   <Menu as="div" className="relative ml-3">
@@ -168,7 +175,7 @@ export default function Header() {
                     </Transition>
                   </Menu>
                 ) : (
-                  <div className="flex space-x-2">
+                  <div className="hidden lg:flex space-x-2">
                     <Link
                       href="/login"
                       className="bg-orange-700 text-white hover:bg-orange-600 rounded-md px-3 py-2 text-sm font-medium"
@@ -187,9 +194,9 @@ export default function Header() {
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
+          <Disclosure.Panel className="lg:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
+              {mobileNavigation.map((item) => (
                 <Disclosure.Button
                   key={item.name}
                   as="a"
