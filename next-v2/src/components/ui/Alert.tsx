@@ -9,14 +9,23 @@ interface AlertProps {
   title?: string;
   message: string;
   dismissible?: boolean;
+  onClose?: () => void; // Add onClose prop
 }
 
-export function Alert({ variant = 'info', title, message, dismissible = true }: AlertProps) {
+export function Alert({ variant = 'info', title, message, dismissible = true, onClose }: AlertProps) {
   const [isVisible, setIsVisible] = useState(true);
 
   if (!isVisible) {
     return null;
   }
+
+  // Function to handle close/dismiss action
+  const handleClose = () => {
+    setIsVisible(false);
+    if (onClose) {
+      onClose(); // Call the onClose function if provided
+    }
+  };
 
   const variantClasses = {
     info: 'bg-orange-50 text-orange-800 border-orange-200',
@@ -33,7 +42,7 @@ export function Alert({ variant = 'info', title, message, dismissible = true }: 
   };
 
   return (
-    <div className={`rounded-md border p-4 ${variantClasses[variant]}`}>
+    <div className={`rounded-md border p-4 ${variantClasses[variant]} mb-4`}>
       <div className="flex">
         <div className="flex-shrink-0">
           {variant === 'info' && (
@@ -69,7 +78,7 @@ export function Alert({ variant = 'info', title, message, dismissible = true }: 
                 className={`inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                   iconClasses[variant]
                 }`}
-                onClick={() => setIsVisible(false)}
+                onClick={handleClose}
               >
                 <span className="sr-only">Dismiss</span>
                 <XMarkIcon className="h-5 w-5" aria-hidden="true" />

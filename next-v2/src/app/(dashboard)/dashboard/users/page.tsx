@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { withRole } from '@/lib/auth';
+import { withRole, useAuth } from '@/lib/auth';
 import { User } from '@/lib/types';
 import { usersApi, authApi } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
@@ -12,7 +12,7 @@ import { Alert } from '@/components/ui/Alert';
 import { Modal } from '@/components/ui/Modal';
 import { Badge } from '@/components/ui/Badge';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { MagnifyingGlassIcon, UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, UserPlusIcon, XMarkIcon, TrashIcon, PencilIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline';
 
 // Define a more precise type for form data
 type UserFormData = {
@@ -23,7 +23,17 @@ type UserFormData = {
   role: 'student' | 'teacher' | 'admin';
 };
 
+// Define a type for edit form data (without passwords)
+type UserEditData = {
+  username: string;
+  email: string;
+  role: 'student' | 'teacher' | 'admin';
+};
+
 function UsersManagementPage() {
+  // Get current logged in user
+  const { user: currentUser } = useAuth();
+  
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +44,7 @@ function UsersManagementPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('');
   
-  // User form
+  // User creation form
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState<UserFormData>({
     username: '',
@@ -46,25 +56,42 @@ function UsersManagementPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // User edit form
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [editFormData, setEditFormData] = useState<UserEditData>({
+    username: '',
+    email: '',
+    role: 'student',
+  });
+  const [editFormErrors, setEditFormErrors] = useState<Record<string, string>>({});
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Delete confirmation
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Fetch users on component mount
   useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await usersApi.getUsers();
-        setUsers(response.results);
-        setFilteredUsers(response.results);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load users');
-        console.error('Error fetching users:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUsers();
   }, []);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await usersApi.getUsers();
+      setUsers(response.results);
+      setFilteredUsers(response.results);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load users');
+      console.error('Error fetching users:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Apply filters
   useEffect(() => {
@@ -97,30 +124,57 @@ function UsersManagementPage() {
     }));
   };
 
+  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({ 
+      ...prev, 
+      [name]: name === 'role' 
+        ? value as 'student' | 'teacher' | 'admin' 
+        : value 
+    }));
+  };
+
   const validateForm = () => {
     const errors: Record<string, string> = {};
     
     if (!formData.username) {
-      errors.username = 'Username is required';
+      errors.username = 'Uživatelské jméno je povinné';
     }
     
     if (!formData.email) {
-      errors.email = 'Email is required';
+      errors.email = 'Email je povinný';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Email is invalid';
+      errors.email = 'Email není validní';
     }
     
     if (!formData.password) {
-      errors.password = 'Password is required';
+      errors.password = 'Heslo je povinné';
     } else if (formData.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters';
+      errors.password = 'Heslo musí mít alespoň 8 znaků';
     }
     
     if (formData.password !== formData.password_confirm) {
-      errors.password_confirm = 'Passwords do not match';
+      errors.password_confirm = 'Hesla se neshodují';
     }
     
     setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const validateEditForm = () => {
+    const errors: Record<string, string> = {};
+    
+    if (!editFormData.username) {
+      errors.username = 'Uživatelské jméno je povinné';
+    }
+    
+    if (!editFormData.email) {
+      errors.email = 'Email je povinný';
+    } else if (!/\S+@\S+\.\S+/.test(editFormData.email)) {
+      errors.email = 'Email není validní';
+    }
+    
+    setEditFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
@@ -138,7 +192,7 @@ function UsersManagementPage() {
       await authApi.register(formData);
       
       // Update success message and close modal
-      setSuccess('User created successfully');
+      setSuccess('Uživatel byl úspěšně vytvořen');
       setIsModalOpen(false);
       
       // Reset form
@@ -151,13 +205,87 @@ function UsersManagementPage() {
       });
       
       // Refresh user list
-      const response = await usersApi.getUsers();
-      setUsers(response.results);
+      fetchUsers();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create user');
+      setError(err instanceof Error ? err.message : 'Nepodařilo se vytvořit uživatele');
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Function to open edit modal and populate form data
+  const openEditModal = (user: User) => {
+    setUserToEdit(user);
+    setEditFormData({
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    });
+    setIsEditModalOpen(true);
+  };
+
+  // Function to handle user edit
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!userToEdit || !validateEditForm()) {
+      return;
+    }
+    
+    setIsEditing(true);
+    setError(null);
+    
+    try {
+      // Add updateUser to your API functions
+      await usersApi.updateUser(userToEdit.id, editFormData);
+      
+      // Update success message and close modal
+      setSuccess(`Uživatel ${userToEdit.username} byl úspěšně upraven`);
+      setIsEditModalOpen(false);
+      setUserToEdit(null);
+      
+      // Refresh user list
+      fetchUsers();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Nepodařilo se upravit uživatele');
+    } finally {
+      setIsEditing(false);
+    }
+  };
+
+  // Function to handle user deletion
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+    
+    setIsDeleting(true);
+    setError(null);
+    
+    try {
+      await usersApi.deleteUser(userToDelete.id);
+      
+      // Update success message and close modal
+      setSuccess(`Uživatel ${userToDelete.username} byl úspěšně smazán`);
+      setDeleteModalOpen(false);
+      setUserToDelete(null);
+      
+      // Refresh user list
+      fetchUsers();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Nepodařilo se smazat uživatele');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Function to open delete confirmation modal
+  const confirmDelete = (user: User) => {
+    setUserToDelete(user);
+    setDeleteModalOpen(true);
+  };
+
+  // Check if user is the current logged in user
+  const isCurrentUser = (userId: number) => {
+    return currentUser?.id === userId;
   };
 
   // Role badge colors
@@ -174,11 +302,21 @@ function UsersManagementPage() {
     }
   };
 
+  // Clear any success messages after 5 seconds
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
+
   return (
     <DashboardLayout>
       <div>
-        <div className="mb-6 flex flex-col md:flex-row md:justify-between md:items-center">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-4 md:mb-0">Users</h1>
+        <div className="mb-4 flex flex-col md:flex-row md:justify-between md:items-center">
+          <h1 className="text-2xl font-semibold text-gray-900 mb-4 md:mb-0">Uživatelé</h1>
           
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <Button 
@@ -187,22 +325,22 @@ function UsersManagementPage() {
               onClick={() => setIsModalOpen(true)}
             >
               <UserPlusIcon className="h-4 w-4 mr-1" />
-              Create User
+              Vytvořit uživatele
             </Button>
           </div>
         </div>
         
         {error && (
-          <Alert variant="danger" message={error} />
+          <Alert variant="danger" message={error} onClose={() => setError(null)} />
         )}
         
         {success && (
-          <Alert variant="success" message={success} />
+          <Alert variant="success" message={success} onClose={() => setSuccess(null)} />
         )}
         
         {/* Filters */}
-        <div className="bg-white shadow rounded-lg p-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white shadow rounded-lg p-3 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="col-span-1 md:col-span-2">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -210,7 +348,7 @@ function UsersManagementPage() {
                 </div>
                 <Input
                   type="text"
-                  placeholder="Search by username or email..."
+                  placeholder="Hledat podle jména nebo emailu..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -247,13 +385,13 @@ function UsersManagementPage() {
         
         {/* Users list */}
         {loading ? (
-          <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
+          <div className="flex justify-center py-6">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-600"></div>
           </div>
         ) : filteredUsers.length === 0 ? (
-          <div className="text-center py-8 bg-white shadow rounded-lg">
+          <div className="text-center py-6 bg-white shadow rounded-lg">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400"
+              className="mx-auto h-10 w-10 text-gray-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -275,22 +413,73 @@ function UsersManagementPage() {
         ) : (
           <div className="bg-white shadow rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
+              {/* Responsive Table */}
+              <div className="block md:hidden">
+                {filteredUsers.map((user) => (
+                  <div key={user.id} className="p-3 border-b border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-8 w-8 bg-orange-600 rounded-full flex items-center justify-center text-white text-sm">
+                          {user.username.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="ml-2">
+                          <div className="flex items-center">
+                            <div className="text-sm font-medium text-gray-900">{user.username}</div>
+                            {isCurrentUser(user.id) && (
+                              <span className="ml-1 px-1.5 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+                                Já
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-xs text-gray-500">{user.email}</div>
+                        </div>
+                      </div>
+                      <Badge variant={getRoleBadgeColor(user.role)} className="text-xs px-2 py-0.5">
+                        {user.role === 'student' ? 'Student' : user.role === 'teacher' ? 'Učitel' : 'Admin'}
+                      </Badge>
+                    </div>
+                    
+                    <div className="flex justify-end space-x-2 mt-2">
+                      <Button 
+                        variant="outline" 
+                        className="inline-flex items-center py-0.5"
+                        onClick={() => openEditModal(user)}
+                      >
+                        <PencilIcon className="h-3 w-3 mr-1" />
+                        Upravit
+                      </Button>
+                      <Button 
+                        variant="danger" 
+                        className="inline-flex items-center py-0.5"
+                        onClick={() => confirmDelete(user)}
+                        disabled={isCurrentUser(user.id)}
+                        title={isCurrentUser(user.id) ? "Nelze smazat vlastní účet" : ""}
+                      >
+                        <TrashIcon className="h-3 w-3 mr-1" />
+                        Smazat
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Desktop Table */}
+              <table className="hidden md:table min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Uživatelské jméno
+                    <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Uživatel
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Email
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Role
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Připojil se
+                    <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Registrace
                     </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Akce
                     </th>
                   </tr>
@@ -298,33 +487,57 @@ function UsersManagementPage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredUsers.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-2 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10 bg-orange-600 rounded-full flex items-center justify-center text-white">
+                          <div className="flex-shrink-0 h-8 w-8 bg-orange-600 rounded-full flex items-center justify-center text-white">
                             {user.username.charAt(0).toUpperCase()}
                           </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{user.username}</div>
+                          <div className="ml-3">
+                            <div className="flex items-center">
+                              <div className="text-sm font-medium text-gray-900">{user.username}</div>
+                              {isCurrentUser(user.id) && (
+                                <span className="ml-2 px-1.5 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+                                  Aktuální
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-2 whitespace-nowrap">
                         <div className="text-sm text-gray-500">{user.email}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-2 whitespace-nowrap">
                         <Badge variant={getRoleBadgeColor(user.role)}>
-                          {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                          {user.role === 'student' ? 'Student' : user.role === 'teacher' ? 'Učitel' : 'Admin'}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-2 whitespace-nowrap">
                         <div className="text-sm text-gray-500">
                           {new Date(user.date_joined).toLocaleDateString()}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Button variant="outline" size="sm">
-                          Zobrazit detail
-                        </Button>
+                      <td className="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex justify-end space-x-2">
+                          <Button 
+                            variant="outline" 
+                            className="inline-flex items-center"
+                            onClick={() => openEditModal(user)}
+                          >
+                            <PencilIcon className="h-3 w-3 mr-1" />
+                            Upravit
+                          </Button>
+                          <Button 
+                            variant="danger" 
+                            className="inline-flex items-center"
+                            onClick={() => confirmDelete(user)}
+                            disabled={isCurrentUser(user.id)}
+                            title={isCurrentUser(user.id) ? "Nelze smazat vlastní účet" : ""}
+                          >
+                            <TrashIcon className="h-3 w-3 mr-1" />
+                            Smazat
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -432,6 +645,111 @@ function UsersManagementPage() {
               </Button>
             </div>
           </form>
+        </Modal>
+
+        {/* Edit User Modal */}
+        <Modal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          title="Upravit uživatele"
+          size="md"
+        >
+          <form onSubmit={handleEditSubmit} className="space-y-4">
+            <div>
+              <Input
+                label="Uživatelské jméno"
+                id="edit-username"
+                name="username"
+                value={editFormData.username}
+                onChange={handleEditInputChange}
+                error={editFormErrors.username}
+                fullWidth
+                required
+              />
+            </div>
+            
+            <div>
+              <Input
+                label="Email"
+                id="edit-email"
+                name="email"
+                type="email"
+                value={editFormData.email}
+                onChange={handleEditInputChange}
+                error={editFormErrors.email}
+                fullWidth
+                required
+              />
+            </div>
+            
+            <div>
+              <Select
+                label="Role"
+                id="edit-role"
+                name="role"
+                value={editFormData.role}
+                onChange={handleEditInputChange}
+                options={[
+                  { value: 'student', label: 'Student' },
+                  { value: 'teacher', label: 'Učitel' },
+                  { value: 'admin', label: 'Admin' },
+                ]}
+                fullWidth
+                required
+              />
+            </div>
+            
+            <div className="pt-4 flex justify-end space-x-3 border-t">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsEditModalOpen(false)}
+              >
+                Zrušit
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                isLoading={isEditing}
+                disabled={isEditing}
+              >
+                Uložit změny
+              </Button>
+            </div>
+          </form>
+        </Modal>
+
+        {/* Delete User Confirmation Modal */}
+        <Modal
+          isOpen={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          title="Smazat uživatele"
+          size="sm"
+        >
+          <div className="p-4">
+            <p className="text-gray-700 mb-6">
+              Opravdu chcete smazat uživatele <span className="font-bold">{userToDelete?.username}</span>? Tato akce je nevratná.
+            </p>
+            
+            <div className="flex justify-end space-x-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setDeleteModalOpen(false)}
+              >
+                Zrušit
+              </Button>
+              <Button
+                type="button"
+                variant="danger"
+                isLoading={isDeleting}
+                disabled={isDeleting}
+                onClick={handleDeleteUser}
+              >
+                Smazat
+              </Button>
+            </div>
+          </div>
         </Modal>
       </div>
     </DashboardLayout>

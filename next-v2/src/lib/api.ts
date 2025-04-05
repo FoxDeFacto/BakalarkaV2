@@ -512,7 +512,8 @@ export const evaluationsApi = {
   },
 };
 
-// Users API
+
+// User API
 export const usersApi = {
   async getUsers(role?: string) {
     let url = `${API_URL}/users/`;
@@ -525,5 +526,27 @@ export const usersApi = {
   async getUser(id: number) {
     const response = await fetchWithAuth(`${API_URL}/users/${id}/`);
     return handleResponse<User>(response);
+  },
+
+  async updateUser(id: number, userData: Partial<User>) {
+    const response = await fetchWithAuth(`${API_URL}/users/${id}/`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
+    
+    return handleResponse<User>(response);
+  },
+  
+  async deleteUser(id: number) {
+    const response = await fetchWithAuth(`${API_URL}/users/${id}/`, {
+      method: 'DELETE',
+    });
+    
+    if (!response.ok) {
+      return handleResponse(response);
+    }
+    
+    return true;
   },
 };
