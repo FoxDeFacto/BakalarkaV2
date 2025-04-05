@@ -170,7 +170,7 @@ function AssignedProjectsPage() {
             {roleDisplayOrder.map(({ key, display }) => (
               projectsByRole[key] && projectsByRole[key].length > 0 && (
                 <div key={key}>
-                  <h2 className="text-lg font-medium text-gray-900 mb-4">Projecty jako {display}</h2>
+                  <h2 className="text-lg font-medium text-gray-900 mb-4">Projekty jako {display}</h2>
                   <div className="overflow-x-auto bg-white shadow rounded-lg">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
