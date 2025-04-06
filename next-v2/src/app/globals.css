@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;  /* Change to white */
+  --foreground: #000000;  /* Keep text black */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;  /* Keep white even in dark mode */
+    --foreground: #000000;  /* Keep text black */
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Set all heading elements to black */
+h1, h2, h3, h4, h5, h6 {
+  color: #000000 !important;
+}
+
+/* Make placeholder text black instead of light gray */
+::placeholder {
+  color: #000000 !important;
+  opacity: 0.7; /* Make it slightly transparent so users know it's a placeholder */
+}
+
+/* For older browsers */
+::-webkit-input-placeholder {
+  color: #000000 !important;
+  opacity: 0.7;
+}
+::-moz-placeholder {
+  color: #000000 !important;
+  opacity: 0.7;
+}
+:-ms-input-placeholder {
+  color: #000000 !important;
+  opacity: 0.7;
+}

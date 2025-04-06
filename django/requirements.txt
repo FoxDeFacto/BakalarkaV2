@@ -1,0 +1,26 @@
+# Základní Django komponenty
+Django==5.1.2
+djangorestframework==3.15.1
+djangorestframework-simplejwt==5.3.1
+django-cors-headers==4.3.1
+django-filter==24.1
+drf-yasg==1.21.7
+
+# Databáze
+psycopg2-binary==2.9.9
+
+# Utility
+python-dotenv==1.0.1
+Pillow==10.2.0
+pyjwt==2.8.0
+
+# WSGI server
+gunicorn==21.2.0
+
+# Produkční nástroje
+whitenoise==6.6.0  # Pro snadnou správu statických souborů
+
+# Bezpečnost
+django-permissions-policy==4.19.0
+django-csp==3.7
+django-referrer-policy==1.0
