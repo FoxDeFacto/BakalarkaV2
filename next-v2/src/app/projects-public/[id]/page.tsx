@@ -68,7 +68,7 @@ export default function PublicProjectDetailPage() {
       const updatedProject = await publicProjectsApi.getProject(projectId);
       setProject(updatedProject);
       setCommentText('');
-      setCommentSuccess('Comment posted successfully!');
+      setCommentSuccess('Komentář úspěšně přidán!');
       
       // Clear success message after 3 seconds
       setTimeout(() => {
@@ -309,7 +309,7 @@ export default function PublicProjectDetailPage() {
                 )}
                 
                 <Textarea
-                  label="Add a comment"
+                  label="Přidat komentář"
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
                   rows={3}

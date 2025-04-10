@@ -66,7 +66,7 @@ function AssignedProjectsPage() {
     
     try {
       await projectTeachersApi.acceptAssignment(assignmentId);
-      setSuccess('Assignment accepted successfully');
+      setSuccess('Přiřazení úspěšně příjmuto');
       
       // Update the local state
       setAssignments(prev => prev.map(a => 

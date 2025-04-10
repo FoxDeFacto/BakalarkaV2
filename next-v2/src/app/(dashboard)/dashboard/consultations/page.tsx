@@ -149,7 +149,7 @@ function ConsultationsDashboardPage() {
     
     try {
       await consultationsApi.createConsultation(data);
-      setSuccess('Consultation scheduled successfully');
+      setSuccess('Konzultace úspěšně naplánována');
       setIsModalOpen(false);
       
       // Refresh consultations list
