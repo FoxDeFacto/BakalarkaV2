@@ -107,16 +107,16 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
             onChange={handleInputChange}
             options={[
               { value: '', label: 'Všechny oblasti' },
-              { value: 'Computer Science', label: 'Computer Science' },
-              { value: 'Biology', label: 'Biology' },
-              { value: 'Chemistry', label: 'Chemistry' },
-              { value: 'Physics', label: 'Physics' },
-              { value: 'Mathematics', label: 'Mathematics' },
-              { value: 'Social Sciences', label: 'Social Sciences' },
-              { value: 'Humanities', label: 'Humanities' },
-              { value: 'Engineering', label: 'Engineering' },
-              { value: 'Arts', label: 'Arts' },
-              { value: 'Other', label: 'Other' },
+              { value: 'IT', label: 'IT' },
+              { value: 'Biology', label: 'Biologie' },
+              { value: 'Chemistry', label: 'Chemie' },
+              { value: 'Physics', label: 'Fyzika' },
+              { value: 'Mathematics', label: 'Matematika' },
+              { value: 'Social Sciences', label: 'Sociální vědy' },
+              { value: 'Humanities', label: 'Humanitní vědy' },
+              { value: 'Engineering', label: 'Strojírenství' },
+              { value: 'Arts', label: 'Úmění' },
+              { value: 'Other', label: 'Ostatní' },
             ]}
             fullWidth
           />
@@ -130,11 +130,10 @@ export function ProjectFilters({ onFilterChange, initialFilters = {} }: ProjectF
             onChange={handleInputChange}
             options={[
               { value: '', label: 'Všechny stavy' },
-              { value: 'draft', label: 'Draft' },
-              { value: 'in_progress', label: 'In Progress' },
-              { value: 'submitted', label: 'Submitted' },
-              { value: 'evaluated', label: 'Evaluated' },
-              { value: 'completed', label: 'Completed' },
+              { value: 'draft', label: 'Koncept' },
+              { value: 'in_progress', label: 'Rozpracované' },
+              { value: 'submitted', label: 'Odevzdáno' },
+              { value: 'evaluated', label: 'Hodnoceno' },
             ]}
             fullWidth
           />

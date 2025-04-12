@@ -81,6 +81,10 @@ def public_projects_list(request):
     if status_param:
         projects = projects.filter(status=status_param)
     
+    type_of_work = request.query_params.get('type_of_work', None)
+    if type_of_work:
+        projects = projects.filter(type_of_work=type_of_work)
+    
     # Apply search if provided
     search = request.query_params.get('search', None)
     if search:
